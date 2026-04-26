@@ -74,7 +74,7 @@ a { color: inherit; text-decoration: none; }
   font-family: var(--display);
   font-weight: 500;
   font-size: 14px;
-  letter-spacing: 4px;
+  letter-spacing: 3px;
   color: var(--ink);
 }
 .nav-right {
@@ -104,16 +104,16 @@ a { color: inherit; text-decoration: none; }
 
 /* ── HERO ── */
 .hero {
-  display: grid;
-  grid-template-columns: 1.3fr 1fr;
-  gap: 40px;
-  align-items: center;
+  position: relative;
   padding: 72px 80px 56px;
   max-width: 1280px;
   margin: 0 auto;
 }
 
-.hero-copy {}
+.hero-copy {
+  position: relative;
+  z-index: 1;
+}
 
 .hero-eyebrow {
   font-family: var(--mono);
@@ -132,14 +132,14 @@ h1 {
   line-height: 1.04;
   letter-spacing: -2px;
   color: var(--ink);
-  max-width: 14ch;
   margin-bottom: 40px;
 }
 
-h1 .mute { color: var(--ink-mute); display: block; }
+h1 .mute { color: var(--ink-mute); }
 
 .hero-rule {
   width: 100%;
+  max-width: 520px;
   height: 0.5px;
   background: var(--rule);
   margin-bottom: 28px;
@@ -163,6 +163,7 @@ h1 .mute { color: var(--ink-mute); display: block; }
   letter-spacing: -0.2px;
   color: var(--ink-mute);
   margin-bottom: 40px;
+  max-width: 520px;
 }
 
 .cta-stack {
@@ -245,12 +246,17 @@ h1 .mute { color: var(--ink-mute); display: block; }
 
 /* ── HERO GRAPHIC ── */
 .hero-graphic {
-  position: relative;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 42%;
+  pointer-events: none;
 }
 .hero-canvas {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
 }
 .commit-label {
   position: absolute;
@@ -360,8 +366,20 @@ section { padding: 112px 0; }
 }
 
 .highlight {
-  background: rgba(110,236,193,0.72);
-  padding: 1px 6px;
+  display: inline-block;
+  position: relative;
+  isolation: isolate;
+}
+.highlight-stroke {
+  display: block;
+  position: absolute;
+  top: -6px;
+  left: -10px;
+  width: calc(100% + 20px);
+  height: calc(100% + 16px);
+  pointer-events: none;
+  z-index: -1;
+  transform: rotate(-0.4deg);
 }
 
 .spec-table { border-top: 0.5px solid var(--rule-mid); }
@@ -381,7 +399,7 @@ section { padding: 112px 0; }
   font-weight: 500;
   letter-spacing: 2.5px;
   text-transform: uppercase;
-  color: var(--ink-light);
+  color: var(--mint-deep);
 }
 
 .spec-name {
@@ -400,28 +418,41 @@ section { padding: 112px 0; }
 }
 
 /* ── THESIS ── */
+.thesis-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: stretch;
+}
+
 .thesis-h2 {
   font-family: var(--display);
   font-weight: 400;
-  font-size: clamp(32px, 4.5vw, 58px);
+  font-size: clamp(30px, 3.8vw, 46px);
   line-height: 1.1;
   letter-spacing: -1.2px;
   color: var(--ink);
   max-width: 28ch;
   margin-bottom: 88px;
 }
-.thesis-h2 .other { color: var(--ink-mute); }
-.thesis-h2 .stress { font-weight: 600; color: var(--ink); display: block; }
+
+#bars-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.thesis-h2 .other { color: var(--ink); }
+.thesis-h2 .stress { font-weight: 400; color: var(--ink-mute); display: block; }
 
 .guarantees { border-top: 0.5px solid var(--rule-mid); }
 
 .g-row {
   display: grid;
-  grid-template-columns: 56px 240px 1fr;
-  gap: 48px;
-  padding: 36px 0;
+  grid-template-columns: 36px 130px 1fr;
+  gap: 20px;
+  padding: 24px 0;
   border-bottom: 0.5px solid var(--rule);
-  align-items: baseline;
+  align-items: center;
 }
 
 .g-num {
@@ -429,7 +460,7 @@ section { padding: 112px 0; }
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 2px;
-  color: var(--ink-light);
+  color: var(--mint-deep);
 }
 
 .g-title {
@@ -508,12 +539,12 @@ section { padding: 112px 0; }
   color: var(--ink-light);
 }
 
-.action-arrow { font-size: 16px; color: var(--ink-light); }
+.action-arrow { font-size: 16px; color: var(--mint-deep); }
 
 .sim-box {
   margin-top: 24px;
   padding: 28px 32px;
-  border: 0.5px solid var(--rule-mid);
+  border: 0.5px solid var(--mint);
   background: rgba(110,236,193,0.04);
 }
 
@@ -572,8 +603,7 @@ section { padding: 112px 0; }
   justify-content: space-between;
   align-items: center;
   gap: 48px;
-  padding-bottom: 56px;
-  border-bottom: 0.5px solid var(--rule);
+  padding-bottom: 14px;
 }
 
 .fslab-h2 {
@@ -605,7 +635,7 @@ section { padding: 112px 0; }
 .fslab-foot {
   display: flex;
   align-items: center;
-  padding-top: 40px;
+  padding-top: 10px;
 }
 
 .fslab-brand {
@@ -618,13 +648,13 @@ section { padding: 112px 0; }
   font-family: var(--display);
   font-weight: 500;
   font-size: 13px;
-  letter-spacing: 4px;
+  letter-spacing: 3px;
   color: var(--ink);
 }
 
 /* ── FOOTNOTE ── */
 .footnote {
-  padding: 36px 80px;
+  padding: 16px 80px;
   border-top: 0.5px solid var(--rule);
 }
 
@@ -632,9 +662,9 @@ section { padding: 112px 0; }
   max-width: 1280px;
   margin: 0 auto;
   font-family: var(--body);
-  font-size: 11px;
-  line-height: 1.65;
-  color: var(--ink-light);
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--ink-faint);
   letter-spacing: 0.1px;
 }
 
@@ -664,7 +694,7 @@ section { padding: 112px 0; }
         <path d="M1916.17 925.456C1928.45 985.201 1935 1048.75 1935 1116.35C1935 1203.02 1924.26 1286.15 1904.72 1365.75C1875.05 1312.96 1844.98 1268.03 1814.37 1231.07C1779.91 1187.92 1742.23 1153.03 1701.39 1126.37C1788.47 1075.68 1860 1008.65 1916.17 925.456Z" fill="#1A2E25"/>
         <path d="M0 0C397.366 0 1447.52 71.7498 1809.9 657.204C1805.19 674.195 1799.7 690.941 1793.28 707.399C1769.03 768.335 1735.83 821.691 1693.69 867.393C1651.57 913.087 1601.78 949.259 1544.33 975.916C1515.41 988.698 1485.51 998.227 1454.64 1004.57C1127.23 724.62 597.516 691.048 0 691.048V0Z" fill="#1A2E25"/>
       </svg>
-      <span class="nav-wordmark">KEYSTONE</span>
+      <span class="nav-wordmark">KEYSTONE · OS</span>
     </a>
     <div class="nav-right">
       <a href="solutions.html" class="nav-link">Solutions</a>
@@ -682,8 +712,8 @@ section { padding: 112px 0; }
   <!-- LEFT: Copy -->
   <div class="hero-copy">
     <h1>
-      Neutral settlement infrastructure for
-      <span class="mute">tokenized finance.</span>
+      Neutral settlement infrastructure<br>
+      for <span class="mute"><span class="highlight">tokenized finance.<svg class="highlight-stroke" viewBox="0 0 600 50" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><filter id="mk" x="-12%" y="-15%" width="124%" height="130%"><feTurbulence type="fractalNoise" baseFrequency="0.006 0.07" numOctaves="2" seed="7" result="n"/><feColorMatrix in="n" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0 0.5" result="d"/><feDisplacementMap in="SourceGraphic" in2="d" scale="36" xChannelSelector="R" yChannelSelector="A" result="ds"/><feTurbulence type="fractalNoise" baseFrequency="0.05 1.2" numOctaves="3" seed="13" result="g"/><feColorMatrix in="g" values="0 0 0 0 0.43  0 0 0 0 0.93  0 0 0 0 0.76  0.55 0.55 0.55 0 0.42" result="t"/><feComposite in="t" in2="ds" operator="in" result="m"/><feGaussianBlur in="m" stdDeviation="0.3"/></filter></defs><rect x="0" y="4" width="600" height="42" rx="14" fill="white" filter="url(#mk)"/></svg></span></span>
     </h1>
 
     <div class="hero-rule"></div>
@@ -757,18 +787,17 @@ section { padding: 112px 0; }
 <!-- ═══════════════════════════════════
      GRID DIVIDER
 ════════════════════════════════════ -->
-<div style="overflow:hidden; line-height:0; -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);">
+<div style="overflow:hidden; line-height:0; background:#F4F4F1; -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);">
   <canvas id="sine-canvas" style="display:block; width:100%; height:240px;"></canvas>
 </div>
 
 <!-- ═══════════════════════════════════
      COMPLIANCE SPEC
 ════════════════════════════════════ -->
-<section>
+<section style="background: #F4F4F1;">
   <div class="wrap">
-    <div class="section-eyebrow fade-in">Compliance</div>
     <h2 class="spec-headline fade-in">
-      Compliance-native <span class="highlight">by design.</span>
+      Compliance-native by design.
     </h2>
     <div class="spec-table fade-in">
       <div class="spec-row">
@@ -800,25 +829,32 @@ section { padding: 112px 0; }
 ════════════════════════════════════ -->
 <section style="border-top: 0.5px solid var(--rule);">
   <div class="wrap">
-    <h2 class="thesis-h2 fade-in">
-      <span class="other">Custodians hold assets.<br>Platforms serve one counterparty.</span>
-      <span class="stress">Neutral infrastructure coordinates both.</span>
-    </h2>
-    <div class="guarantees">
-      <div class="g-row fade-in">
-        <span class="g-num">01</span>
-        <span class="g-title">No custody.</span>
-        <span class="g-body">Assets remain with existing custodians.</span>
+    <div class="thesis-grid">
+      <div>
+        <h2 class="thesis-h2 fade-in">
+          <span class="other">Custodians hold assets.<br>Platforms serve one counterparty.</span>
+          <span class="stress">Neutral infrastructure coordinates both.</span>
+        </h2>
+        <div class="guarantees">
+          <div class="g-row fade-in">
+            <span class="g-num">01</span>
+            <span class="g-title">No custody.</span>
+            <span class="g-body">Assets remain with existing custodians.</span>
+          </div>
+          <div class="g-row fade-in">
+            <span class="g-num">02</span>
+            <span class="g-title">No matching.</span>
+            <span class="g-body">Price and counterparty are determined upstream.</span>
+          </div>
+          <div class="g-row fade-in">
+            <span class="g-num">03</span>
+            <span class="g-title">No bridging.</span>
+            <span class="g-body">Assets settle on their native chain. Nothing moves between networks.</span>
+          </div>
+        </div>
       </div>
-      <div class="g-row fade-in">
-        <span class="g-num">02</span>
-        <span class="g-title">No matching.</span>
-        <span class="g-body">Price and counterparty are determined upstream.</span>
-      </div>
-      <div class="g-row fade-in">
-        <span class="g-num">03</span>
-        <span class="g-title">No bridging.</span>
-        <span class="g-body">Assets settle on their native chain. Nothing moves between networks.</span>
+      <div style="min-height:100%;">
+        <canvas id="bars-canvas"></canvas>
       </div>
     </div>
   </div>
@@ -827,11 +863,10 @@ section { padding: 112px 0; }
 <!-- ═══════════════════════════════════
      ENGAGEMENT
 ════════════════════════════════════ -->
-<section id="engagement" style="border-top: 0.5px solid var(--rule);">
+<section id="engagement" style="border-top: 0.5px solid var(--rule); background: #F4F4F1;">
   <div class="wrap">
     <div class="engagement-grid">
       <div class="fade-in">
-        <div class="section-eyebrow">Engagement</div>
         <h3 class="engagement-h3">
           Architecture walkthrough, settlement mechanics, and direct answers
           on integration timing and commercial terms.
@@ -839,21 +874,6 @@ section { padding: 112px 0; }
         <p class="engagement-p">Documentation, SDKs, and a live simulation environment.</p>
       </div>
       <div class="fade-in">
-        <div class="action-list">
-          <a href="mailto:briefings@keystoneos.xyz" class="action-item">
-            <div class="action-left">
-              <span class="action-title">Request a briefing</span>
-              <span class="action-email">briefings@keystoneos.xyz</span>
-            </div>
-            <span class="action-arrow">›</span>
-          </a>
-          <a href="mailto:briefings@keystoneos.xyz" class="action-item">
-            <div class="action-left">
-              <span class="action-title">Request technical documentation</span>
-            </div>
-            <span class="action-arrow">›</span>
-          </a>
-        </div>
         <div class="sim-box">
           <div class="sim-head">
             <span class="sim-title">Simulation environment</span>
@@ -877,7 +897,6 @@ section { padding: 112px 0; }
     <div class="fslab-top">
       <div>
         <h2 class="fslab-h2">Neutral settlement infrastructure.</h2>
-        <p class="fslab-caption">KEYSTONE OS · 2026</p>
       </div>
       <div class="fslab-actions">
         <a href="mailto:briefings@keystoneos.xyz" class="btn-outline">Request technical documentation</a>
@@ -891,7 +910,7 @@ section { padding: 112px 0; }
           <path d="M1916.17 925.456C1928.45 985.201 1935 1048.75 1935 1116.35C1935 1203.02 1924.26 1286.15 1904.72 1365.75C1875.05 1312.96 1844.98 1268.03 1814.37 1231.07C1779.91 1187.92 1742.23 1153.03 1701.39 1126.37C1788.47 1075.68 1860 1008.65 1916.17 925.456Z" fill="#1A2E25"/>
           <path d="M0 0C397.366 0 1447.52 71.7498 1809.9 657.204C1805.19 674.195 1799.7 690.941 1793.28 707.399C1769.03 768.335 1735.83 821.691 1693.69 867.393C1651.57 913.087 1601.78 949.259 1544.33 975.916C1515.41 988.698 1485.51 998.227 1454.64 1004.57C1127.23 724.62 597.516 691.048 0 691.048V0Z" fill="#1A2E25"/>
         </svg>
-        <span class="fslab-wordmark">KEYSTONE</span>
+        <span class="fslab-wordmark">KEYSTONE · OS</span>
       </div>
     </div>
   </div>
@@ -1125,7 +1144,7 @@ section { padding: 112px 0; }
   const ctx    = canvas.getContext('2d');
   const INK    = [26, 46, 37];
   const MINT   = [110, 236, 193];
-  const BG     = '#FAFAF8';
+  const BG     = '#F4F4F1';
   const R      = window.devicePixelRatio || 1;
 
   function resize() {
@@ -1139,21 +1158,22 @@ section { padding: 112px 0; }
   // cross through each other, different frequencies so they move
   // independently — this produces the helix/rotating effect.
   const LINES = [
-    { baseYFrac: 0.20, ampFrac: 0.19, freq: 0.50 },
-    { baseYFrac: 0.40, ampFrac: 0.23, freq: 0.80 },
-    { baseYFrac: 0.60, ampFrac: 0.21, freq: 0.65 },
-    { baseYFrac: 0.80, ampFrac: 0.19, freq: 1.10 },
+    { baseYFrac: 0.22, ampFrac: 0.32, freq: 0.50 },
+    { baseYFrac: 0.40, ampFrac: 0.38, freq: 0.80 },
+    { baseYFrac: 0.60, ampFrac: 0.36, freq: 0.65 },
+    { baseYFrac: 0.78, ampFrac: 0.32, freq: 1.10 },
   ];
 
-  const DOTS_PER_LINE = 22;
-  const V_LINES       = 38;
-  const H_LINES       = 15; // more lines = more snap positions = richer movement
+  // DOTS_PER_LINE === V_LINES so each dot sits exactly on a vertical grid line
+  const DOTS_PER_LINE = 33;
+  const V_LINES       = 33;
+  const H_LINES       = 15;
 
   const lines = LINES.map((def, li) =>
     Array.from({ length: DOTS_PER_LINE }, (_, j) => ({
       def,
-      xFrac: (j + 1) / (DOTS_PER_LINE + 1),
-      phase: j * 0.2 + li * 1.5,   // j*0.2 matches original; li offset separates lines
+      xFrac: (j + 1) / (V_LINES + 1),  // matches grid line i = j+1 exactly
+      phase: j * 0.2 + li * 1.5,
       mint:  Math.random() < 0.10,
       sz:    (2.2 + Math.random() * 2.0) * R,
       op:    0.50 + Math.random() * 0.25,
@@ -1192,6 +1212,7 @@ section { padding: 112px 0; }
         const y = dot.def.baseYFrac * H
                 + Math.sin(time * dot.def.freq + dot.phase) * dot.def.ampFrac * H;
 
+        const mintScale = dot.mint ? 1.25 : 1;
         const sizeVar = 1 + Math.sin(time * 1.5   + dot.phase) * 0.28;
         const opVar   =     Math.sin(time * 1.125  + dot.phase) * 0.15;
         const alpha   = Math.min(Math.max(dot.op + opVar, 0.20), 0.82);
@@ -1200,7 +1221,7 @@ section { padding: 112px 0; }
           ? `rgba(${MINT[0]},${MINT[1]},${MINT[2]},${alpha * 0.9})`
           : `rgba(${INK[0]},${INK[1]},${INK[2]},${alpha})`;
         ctx.beginPath();
-        ctx.arc(x, y, (dot.sz * sizeVar) / 2, 0, Math.PI * 2);
+        ctx.arc(x, y, (dot.sz * sizeVar * mintScale) / 2, 0, Math.PI * 2);
         ctx.fill();
       });
     });
@@ -1227,6 +1248,182 @@ section { padding: 112px 0; }
     });
   }, { threshold: 0.12 });
   els.forEach(el => obs.observe(el));
+})();
+</script>
+
+<script>
+/* ── BARS CANVAS ── */
+(function () {
+  const canvas = document.getElementById('bars-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const R = window.devicePixelRatio || 1;
+  const NUM_LINES = 32;
+  const DOT_CHANCE = 0.12; /* ~12% of segments rendered as dots */
+
+  /* Dark moving state: ink at ~35% on paper */
+  const COLOR_MOVING  = [172, 179, 174];
+  /* Settled state: mint */
+  const COLOR_SETTLED = [110, 236, 193];
+
+  function noise(x, y, seed) {
+    return (Math.sin(x * 0.02 + seed) * Math.cos(y * 0.02 + seed) +
+            Math.sin(x * 0.03 - seed) * Math.cos(y * 0.01 + seed) + 1) / 2;
+  }
+
+  /* seeded pseudo-random so dot/bar assignment is stable per column+segment */
+  function seededRand(i, j, seed) {
+    const x = Math.sin(i * 127.1 + j * 311.7 + seed * 74.3) * 43758.5453;
+    return x - Math.floor(x);
+  }
+
+  function generatePattern(seed, W, H) {
+    const spacing = W / NUM_LINES;
+    const out = [];
+    for (let i = 0; i < NUM_LINES; i++) {
+      const bars = [];
+      let y = 0, j = 0;
+      while (y < H) {
+        const n = noise(i * spacing, y, seed);
+        if (n > 0.5) {
+          const len = 10 + n * 30;
+          bars.push({
+            y: y + len / 2,
+            h: len,
+            w: 2 + n * 3,
+            dot: seededRand(i, j, seed) < DOT_CHANCE
+          });
+          y += len + 8;
+          j++;
+        } else {
+          y += 8;
+        }
+      }
+      out.push(bars);
+    }
+    return out;
+  }
+
+  let W = 400, H = 600;
+  let pattern1, pattern2;
+
+  function resize() {
+    const par = canvas.parentElement;
+    W = par.clientWidth  || 400;
+    H = par.clientHeight || 600;
+    canvas.style.width  = W + 'px';
+    canvas.style.height = H + 'px';
+    canvas.width  = W * R;
+    canvas.height = H * R;
+    ctx.setTransform(R, 0, 0, R, 0, 0);
+    pattern1 = generatePattern(0, W, H);
+    pattern2 = generatePattern(5, W, H);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function lerpRGB(a, b, t) {
+    return [
+      a[0] + (b[0] - a[0]) * t | 0,
+      a[1] + (b[1] - a[1]) * t | 0,
+      a[2] + (b[2] - a[2]) * t | 0,
+    ];
+  }
+
+  function drawRoundRect(x, y, w, h, r) {
+    r = Math.min(r, w / 2, h / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.arcTo(x + w, y,     x + w, y + r,     r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+    ctx.lineTo(x + r, y + h);
+    ctx.arcTo(x,     y + h, x,     y + h - r, r);
+    ctx.lineTo(x, y + r);
+    ctx.arcTo(x,     y,     x + r, y,         r);
+    ctx.closePath();
+  }
+
+  let time = 0;
+
+  function animate() {
+    time += 0.005;
+    const cycle = time % (Math.PI * 2);
+
+    /* Cycle: move (dark) → arrive (green) → hold → quick reset
+       ease=0 → bars at pattern1, just starting to move (dark)
+       ease=1 → bars arrived at pattern2, fully settled (green)    */
+    let ease;
+    if (cycle < Math.PI * 1.4) {
+      ease = cycle / (Math.PI * 1.4);                              /* slow journey 0→1 */
+    } else if (cycle < Math.PI * 1.8) {
+      ease = 1;                                                     /* hold green       */
+    } else {
+      ease = 1 - (cycle - Math.PI * 1.8) / (Math.PI * 0.2);       /* quick reset 1→0  */
+    }
+    ease = Math.max(0, Math.min(1, ease));
+
+    /* cubic ease-out: natural deceleration into settled state */
+    const s = 1 - Math.pow(1 - ease, 3);
+
+    /* color tracks ease directly: dark when just started, mint as bars arrive */
+    const tColor = ease;
+    const [cr, cg, cb] = lerpRGB(COLOR_MOVING, COLOR_SETTLED, tColor);
+    const barColor = `rgb(${cr},${cg},${cb})`;
+
+    /* wave strongest at start of journey, fades to zero at rest */
+    const waveAmp = 12 * (1 - ease);
+
+    const spacing = W / NUM_LINES;
+
+    ctx.fillStyle = '#FAFAF8';
+    ctx.fillRect(0, 0, W, H);
+
+    for (let i = 0; i < NUM_LINES; i++) {
+      const x = i * spacing + spacing / 2;
+
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(26,46,37,0.144)'; /* 20% darker than 0.12 */
+      ctx.lineWidth = 0.5;
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, H);
+      ctx.stroke();
+
+      const b1 = pattern1[i], b2 = pattern2[i];
+      const max = Math.max(b1.length, b2.length);
+
+      for (let j = 0; j < max; j++) {
+        let p1 = b1[j], p2 = b2[j];
+        if (!p1) p1 = { y: p2.y - 100, h: 0, w: 0, dot: p2.dot };
+        if (!p2) p2 = { y: p1.y + 100, h: 0, w: 0, dot: p1.dot };
+
+        const wave = Math.sin(i * 0.3 + j * 0.5 + time * 2) * waveAmp;
+        const y  = p1.y + (p2.y - p1.y) * s + wave;
+        const bh = p1.h + (p2.h - p1.h) * s;
+        const bw = p1.w + (p2.w - p1.w) * s;
+
+        if (bh < 0.5 || bw < 0.5) continue;
+
+        ctx.fillStyle = barColor;
+
+        if (p1.dot) {
+          /* dot: circle with radius proportional to bar width */
+          const dotR = bw * 0.65;
+          ctx.beginPath();
+          ctx.arc(x, y, dotR, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          drawRoundRect(x - bw / 2, y - bh / 2, bw, bh, bw / 2);
+          ctx.fill();
+        }
+      }
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
 })();
 </script>
 
