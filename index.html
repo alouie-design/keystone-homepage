@@ -942,8 +942,8 @@ section { padding: 112px 0; }
   const ctx    = canvas.getContext('2d');
   const label  = document.getElementById('commit-label');
 
-  // 2× internal resolution for sharpness
-  const R  = 2;
+  // Match device pixel ratio for sharpness on any display
+  const R  = window.devicePixelRatio || 1;
   const CW = 500 * R, CH = 600 * R;
   canvas.width  = CW;
   canvas.height = CH;
