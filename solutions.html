@@ -74,7 +74,7 @@ a { color: inherit; text-decoration: none; }
   font-family: var(--display);
   font-weight: 500;
   font-size: 14px;
-  letter-spacing: 4px;
+  letter-spacing: 3px;
   color: var(--ink);
 }
 .nav-right {
@@ -748,10 +748,10 @@ section { padding: 112px 0; }
 /* ── PLATFORMS CANVAS ── */
 .platforms-canvas-wrap {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1;
   overflow: hidden;
-  -webkit-mask-image: radial-gradient(ellipse 85% 85% at 50% 50%, black 60%, transparent 80%);
-  mask-image: radial-gradient(ellipse 85% 85% at 50% 50%, black 60%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 92% 88% at 52% 56%, black 38%, transparent 62%);
+  mask-image: radial-gradient(ellipse 92% 88% at 52% 56%, black 38%, transparent 62%);
 }
 .platforms-canvas-wrap canvas {
   display: block;
@@ -776,7 +776,6 @@ section { padding: 112px 0; }
       <span class="nav-wordmark">KEYSTONE · OS</span>
     </a>
     <div class="nav-right">
-      <a href="index.html" class="nav-link">Home</a>
       <a href="#engagement" class="btn-primary" style="padding: 10px 18px; font-size: 12px;">Request a briefing →</a>
     </div>
   </div>
@@ -879,10 +878,10 @@ section { padding: 112px 0; }
 <!-- ═══════════════════════════════════
      FOR PLATFORMS
 ════════════════════════════════════ -->
-<section id="platforms" style="border-top: 0.5px solid var(--rule);">
+<section id="platforms" style="border-top: 0.5px solid var(--rule); padding-top: 90px;">
   <div class="wrap">
     <div class="section-eyebrow fade-in" style="margin-bottom:20px;">For Platforms</div>
-    <div class="arch-intro fade-in" style="align-items:start;">
+    <div class="arch-intro fade-in" style="align-items:start; margin-bottom: 70px;">
       <div>
         <h2 class="section-h2">One integration.<br>Every counterparty.</h2>
         <p class="section-p">Settle with any institution on any platform. Every platform that joins expands your counterparty reach, and theirs.</p>
@@ -1008,8 +1007,12 @@ section { padding: 112px 0; }
   const ctx = canvas.getContext('2d');
 
   const CW = 1120, CH = 280;
-  canvas.width  = CW;
-  canvas.height = CH;
+  const R  = window.devicePixelRatio || 1;
+  canvas.width        = CW * R;
+  canvas.height       = CH * R;
+  canvas.style.width  = CW + 'px';
+  canvas.style.height = CH + 'px';
+  ctx.setTransform(R, 0, 0, R, 0, 0);
 
   const INK  = [26, 46, 37];
   const MINT = '#6EECC1';
@@ -1356,42 +1359,79 @@ section { padding: 112px 0; }
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
+  const R = window.devicePixelRatio || 1;
+  let cssW, cssH;
+  const Y_OFFSET = 15; // slight downward shift for visual centering
+
   function setSize() {
-    const rect = canvas.parentElement.getBoundingClientRect();
-    canvas.width  = rect.width;
-    canvas.height = rect.height;
+    const rect    = canvas.parentElement.getBoundingClientRect();
+    cssW          = rect.width;
+    cssH          = rect.height;
+    canvas.width  = cssW * R;
+    canvas.height = cssH * R;
+    canvas.style.width  = cssW + 'px';
+    canvas.style.height = cssH + 'px';
+    ctx.setTransform(R, 0, 0, R, 0, 0);
   }
   setSize();
   window.addEventListener('resize', setSize);
 
   // ── Sample logo shape into particle targets ──────────────────────────────
+  // Per-path sampling gives each part its correct visual weight regardless of filled area.
+  // Arm (bottom sweep) is thin but visually dominant — boost to 42%.
+  // Body (top mass) 45%, nub (right detail) 13%.
   function sampleLogoPoints(count) {
-    const off = document.createElement('canvas');
-    off.width  = canvas.width;
-    off.height = canvas.height;
-    const oc  = off.getContext('2d');
     const svgW = 1935, svgH = 2658;
-    const scale   = Math.min(canvas.width * 0.52 / svgW, canvas.height * 0.52 / svgH);
-    const offsetX = (canvas.width  - svgW * scale) / 2;
-    const offsetY = (canvas.height - svgH * scale) / 2;
-    oc.save();
-    oc.translate(offsetX, offsetY);
-    oc.scale(scale, scale);
-    oc.fillStyle = '#000';
-    oc.fill(new Path2D('M1691.44 1455.72C1698.53 1467.86 1705.66 1480.58 1712.83 1493.87L1795.1 1644.64C1431.34 2310.84 483.761 2658 483.761 2658V2126.37C867.062 2080.88 1617.58 1801.8 1691.44 1455.72Z'));
-    oc.fill(new Path2D('M1916.17 925.456C1928.45 985.201 1935 1048.75 1935 1116.35C1935 1203.02 1924.26 1286.15 1904.72 1365.75C1875.05 1312.96 1844.98 1268.03 1814.37 1231.07C1779.91 1187.92 1742.23 1153.03 1701.39 1126.37C1788.47 1075.68 1860 1008.65 1916.17 925.456Z'));
-    oc.fill(new Path2D('M0 0C397.366 0 1447.52 71.7498 1809.9 657.204C1805.19 674.195 1799.7 690.941 1793.28 707.399C1769.03 768.335 1735.83 821.691 1693.69 867.393C1651.57 913.087 1601.78 949.259 1544.33 975.916C1515.41 988.698 1485.51 998.227 1454.64 1004.57C1127.23 724.62 597.516 691.048 0 691.048V0Z'));
-    oc.restore();
-    const data   = oc.getImageData(0, 0, canvas.width, canvas.height).data;
-    const filled = [];
-    for (let y = 0; y < canvas.height; y++)
-      for (let x = 0; x < canvas.width; x++)
-        if (data[(y * canvas.width + x) * 4 + 3] > 128)
-          filled.push({ x: x - canvas.width / 2, y: y - canvas.height / 2 });
-    const result = [];
-    for (let i = 0; i < count; i++)
-      result.push(filled[Math.floor(Math.random() * filled.length)]);
-    return result;
+    const scale   = Math.min(cssW * 0.52 / svgW, cssH * 0.52 / svgH);
+    const offsetX = (cssW - svgW * scale) / 2;
+    const offsetY = (cssH - svgH * scale) / 2;
+
+    function samplePath(pathStr, n) {
+      const off = document.createElement('canvas');
+      off.width = cssW; off.height = cssH;
+      const oc = off.getContext('2d');
+      oc.save();
+      oc.translate(offsetX, offsetY);
+      oc.scale(scale, scale);
+      oc.fillStyle = '#000';
+      oc.fill(new Path2D(pathStr));
+      oc.restore();
+      const data = oc.getImageData(0, 0, cssW, cssH).data;
+      const filled = [];
+      for (let y = 0; y < cssH; y++)
+        for (let x = 0; x < cssW; x++)
+          if (data[(y * cssW + x) * 4 + 3] > 128)
+            filled.push({ x: x - cssW / 2, y: y - cssH / 2 });
+      if (!filled.length) return Array(n).fill({ x: 0, y: 0 });
+      // Even coverage: shuffle once, then walk through with wrap-around.
+      // This eliminates the random-with-replacement clumping that distorts the shape.
+      for (let i = filled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const tmp = filled[i]; filled[i] = filled[j]; filled[j] = tmp;
+      }
+      const result = [];
+      for (let i = 0; i < n; i++) result.push(filled[i % filled.length]);
+      return result;
+    }
+
+    const armPath  = 'M1691.44 1455.72C1698.53 1467.86 1705.66 1480.58 1712.83 1493.87L1795.1 1644.64C1431.34 2310.84 483.761 2658 483.761 2658V2126.37C867.062 2080.88 1617.58 1801.8 1691.44 1455.72Z';
+    const nubPath  = 'M1916.17 925.456C1928.45 985.201 1935 1048.75 1935 1116.35C1935 1203.02 1924.26 1286.15 1904.72 1365.75C1875.05 1312.96 1844.98 1268.03 1814.37 1231.07C1779.91 1187.92 1742.23 1153.03 1701.39 1126.37C1788.47 1075.68 1860 1008.65 1916.17 925.456Z';
+    const bodyPath = 'M0 0C397.366 0 1447.52 71.7498 1809.9 657.204C1805.19 674.195 1799.7 690.941 1793.28 707.399C1769.03 768.335 1735.83 821.691 1693.69 867.393C1651.57 913.087 1601.78 949.259 1544.33 975.916C1515.41 988.698 1485.51 998.227 1454.64 1004.57C1127.23 724.62 597.516 691.048 0 691.048V0Z';
+
+    // Body is the visually dominant mass in the SVG; give it more particles.
+    // Arm is a thin curve, boost beyond its natural area share so it reads.
+    const armCount  = Math.round(count * 0.34);
+    const bodyCount = Math.round(count * 0.56);
+    const nubCount  = count - armCount - bodyCount;
+
+    // Per-path horizontal stretch: body extended 40%, arm contracted 20%.
+    // Stretching around x=0 (canvas center) spreads the points outward symmetrically.
+    const stretchX = (pts, fx) => pts.map(p => ({ x: p.x * fx, y: p.y }));
+    return [
+      ...stretchX(samplePath(armPath,  armCount),  0.80),
+      ...stretchX(samplePath(bodyPath, bodyCount), 1.40),
+      ...samplePath(nubPath, nubCount),
+    ];
   }
 
   // ── Particles ────────────────────────────────────────────────────────────
@@ -1404,18 +1444,15 @@ section { padding: 112px 0; }
   const particles = Array(numParticles).fill(null).map((_, i) => {
     const angle1 = (i / numParticles) * Math.PI * 2;
     const angle2 = Math.random() * Math.PI * 2;
-    const bs     = 120;
+    const bs     = 180;
     const r1     = bs * (1 + 0.3 * Math.sin(angle1 * 2));
     const s1x    = r1 * Math.cos(angle1) * (1 + 0.2 * Math.sin(angle1 * 3 + initialT * 0.1));
     const s1y    = r1 * Math.sin(angle1) * (1 + 0.4 * Math.cos(angle1 * 3 + initialT * 0.2));
     const r2     = bs * (1 + 0.4 * Math.sin(angle2 * 3));
     const s2x    = r2 * Math.cos(angle2) * (1 + 0.3 * Math.sin(angle2 * 2 + initialT * 0.15));
     const s2y    = r2 * Math.sin(angle2) * (1 + 0.2 * Math.cos(angle2 * 4 + initialT * 0.25));
-    let x = canvas.width  / 2 + s1x * (1 - initialMorphFactor) + s2x * initialMorphFactor;
-    let y = canvas.height / 2 + s1y * (1 - initialMorphFactor) + s2y * initialMorphFactor;
-    const ib = 50 * (Math.sin(initialT * 0.3) * 0.2 + 0.8);
-    x += ib * Math.exp(-Math.pow(angle1 - Math.PI * 0.5, 2)) * Math.sin(initialT * 0.4);
-    y += ib * 0.5 * Math.exp(-Math.pow(angle1 - Math.PI * 0.5, 2)) * Math.cos(initialT * 0.3);
+    let x = cssW / 2 + s1x * (1 - initialMorphFactor) + s2x * initialMorphFactor;
+    let y = cssH / 2 + Y_OFFSET + s1y * (1 - initialMorphFactor) + s2y * initialMorphFactor;
     return { x, y, size: Math.random() * 1.5 + 0.5,
              connections: [], targetX: 0, targetY: 0, vx: 0, vy: 0, angle: angle2 };
   });
@@ -1453,40 +1490,38 @@ section { padding: 112px 0; }
 
   // ── calculateTargets ─────────────────────────────────────────────────────
   function calculateTargets(t) {
-    const aTime    = t - 65 + animationStartTime;
-    const easeIn   = Math.min(1, aTime / 10);
-    const morph    = Math.sin(t * 0.2) * 0.5 + 0.5;
-    // Logo factor: smooth sinusoidal pulse, spends most time as blob
-    const logoFactor = Math.pow(Math.max(0, Math.sin((t - 65) * 0.7)), 3);
+    const morph      = Math.sin(t * 0.10) * 0.5 + 0.5;
+    const logoFactor = Math.pow(Math.max(0, Math.sin((t - 65) * 0.45)), 2);
 
     particles.forEach((p, i) => {
       const a1  = (i / numParticles) * Math.PI * 2;
       const a2  = p.angle;
-      const bs  = 120;
-      const ba  = 50 * (Math.sin(t * 0.3) * 0.2 + 0.8);
-      const te  = t + aTime * easeIn * 0.1;
+      const bs  = 180;
       const r1  = bs * (1 + 0.3 * Math.sin(a1 * 2));
-      const s1x = r1 * Math.cos(a1) * (1 + 0.2 * Math.sin(a1 * 3 + te * 0.1));
-      const s1y = r1 * Math.sin(a1) * (1 + 0.4 * Math.cos(a1 * 3 + te * 0.2));
+      const s1x = r1 * Math.cos(a1) * (1 + 0.2 * Math.sin(a1 * 3 + t * 0.1));
+      const s1y = r1 * Math.sin(a1) * (1 + 0.4 * Math.cos(a1 * 3 + t * 0.2));
       const r2  = bs * (1 + 0.4 * Math.sin(a2 * 3));
-      const s2x = r2 * Math.cos(a2) * (1 + 0.3 * Math.sin(a2 * 2 + te * 0.15));
-      const s2y = r2 * Math.sin(a2) * (1 + 0.2 * Math.cos(a2 * 4 + te * 0.25));
-      const bx  = ba * Math.exp(-Math.pow(a1 - Math.PI * 0.5, 2));
-      const by  = ba * 0.5 * Math.exp(-Math.pow(a1 - Math.PI * 0.5, 2));
-      const ox  = s1x * (1 - morph) + s2x * morph + bx * Math.sin(te * 0.4) + (Math.random() - 0.5) * 5;
-      const oy  = s1y * (1 - morph) + s2y * morph + by * Math.cos(te * 0.3) + (Math.random() - 0.5) * 5;
+      const s2x = r2 * Math.cos(a2) * (1 + 0.3 * Math.sin(a2 * 2 + t * 0.15));
+      const s2y = r2 * Math.sin(a2) * (1 + 0.2 * Math.cos(a2 * 4 + t * 0.25));
+      const ox  = s1x * (1 - morph) + s2x * morph + (Math.random() - 0.5) * 3;
+      const oy  = s1y * (1 - morph) + s2y * morph + (Math.random() - 0.5) * 3;
       const lt  = logoTargets[i];
-      p.targetX = ox * (1 - logoFactor) + lt.x * logoFactor;
-      p.targetY = oy * (1 - logoFactor) + lt.y * logoFactor;
+      // Gentle rotation during logo dwell: ±5° rock over ~2 sec
+      const rotAngle = logoFactor * 0.06 * Math.sin(time * 0.4);
+      const cosR = Math.cos(rotAngle), sinR = Math.sin(rotAngle);
+      const rotX = lt.x * cosR - lt.y * sinR;
+      const rotY = lt.x * sinR + lt.y * cosR;
+      p.targetX = ox * (1 - logoFactor) + rotX * logoFactor;
+      p.targetY = oy * (1 - logoFactor) + rotY * logoFactor;
     });
   }
 
   function updateParticles() {
     const aTime  = time - 65 + animationStartTime;
-    const easing = 0.01 + 0.02 * Math.min(1, aTime / 5);
+    const easing = 0.006 + 0.008 * Math.min(1, aTime / 8);
     particles.forEach(p => {
-      p.x += (p.targetX - (p.x - canvas.width  / 2)) * easing;
-      p.y += (p.targetY - (p.y - canvas.height / 2)) * easing;
+      p.x += (p.targetX - (p.x - cssW / 2)) * easing;
+      p.y += (p.targetY - (p.y - (cssH / 2 + Y_OFFSET))) * easing;
       p.connections = [];
     });
   }
@@ -1509,9 +1544,9 @@ section { padding: 112px 0; }
   }
 
   function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // transparent background
+    ctx.clearRect(0, 0, cssW, cssH); // transparent background
 
-    const cx = canvas.width / 2, cy = canvas.height / 2;
+    const cx = cssW / 2, cy = cssH / 2 + Y_OFFSET;
 
     // Regular connections
     ctx.strokeStyle = 'rgba(26,46,37,0.18)';
