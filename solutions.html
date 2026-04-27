@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solutions · KeyStone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+/* ── TOKENS ── */
+:root {
+  --paper:      #FAFAF8;
+  --ink:        #1A2E25;
+  --ink-mute:   #4A5853;
+  --ink-light:  #7A8580;
+  --ink-faint:  #B8BFB9;
+  --rule:       rgba(26,46,37,0.10);
+  --rule-mid:   rgba(26,46,37,0.16);
+  --mint:       #6EECC1;
+  --mint-deep:  #0A6E54;
+  --slab:       #080E0C;
+  --display:    'Outfit', system-ui, sans-serif;
+  --body:       'Inter', system-ui, sans-serif;
+  --mono:       'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* ── RESET ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--body);
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+
+/* ── LAYOUT ── */
+.wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 80px;
+}
+
+/* ── NAV ── */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(250,250,248,0.94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 0.5px solid var(--rule);
+}
+.nav-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 80px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.nav-wordmark {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 4px;
+  color: var(--ink);
+}
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+.nav-link {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ink-mute);
+  transition: color 0.2s;
+}
+.nav-link:hover { color: var(--ink); }
+.nav-link.active { color: var(--ink); }
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--mint-deep);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.nav-cta::after { content: "→"; }
+
+/* ── PAGE HEADER ── */
+.page-header {
+  padding: 96px 80px 80px;
+  max-width: 1280px;
+  margin: 0 auto;
+  border-bottom: 0.5px solid var(--rule);
+  position: relative;
+  overflow: hidden;
+}
+
+.mandala-canvas {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  right: 0;
+  width: 100%;
+  pointer-events: none;
+  z-index: 0;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 18%, black 82%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 18%, black 82%, transparent 100%);
+}
+
+.page-h1, .page-eyebrow, .page-sub { position: relative; z-index: 1; }
+
+.page-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--ink-light);
+  margin-bottom: 32px;
+}
+
+.page-h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(40px, 4.5vw, 64px);
+  line-height: 1.04;
+  letter-spacing: -2px;
+  color: var(--ink);
+  max-width: 18ch;
+  margin-bottom: 32px;
+}
+
+.page-h1 .mute { color: var(--ink-mute); }
+
+.page-sub {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.5;
+  letter-spacing: -0.2px;
+  color: var(--ink-mute);
+  max-width: 52ch;
+}
+
+/* ── PAGE NAV ANCHORS ── */
+.page-toc {
+  border-bottom: 0.5px solid var(--rule);
+}
+.page-toc-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 80px;
+  display: flex;
+  gap: 0;
+}
+.toc-item {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink-light);
+  padding: 18px 0;
+  margin-right: 48px;
+  border-bottom: 1.5px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  cursor: pointer;
+}
+.toc-item:hover { color: var(--ink); }
+.toc-item.active { color: var(--ink); border-bottom-color: var(--ink); }
+
+/* ── DIVIDER ── */
+.h-rule { width: 100%; height: 0.5px; background: var(--rule); }
+
+/* ── SECTIONS ── */
+section { padding: 112px 0; }
+
+.section-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--ink-light);
+  margin-bottom: 40px;
+}
+
+.section-h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(30px, 3.8vw, 46px);
+  line-height: 1.1;
+  letter-spacing: -0.8px;
+  color: var(--ink);
+}
+
+.section-p {
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--ink-mute);
+  max-width: 48ch;
+  margin-top: 24px;
+}
+
+/* ── ARCHITECTURE ── */
+.arch-intro {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: end;
+  margin-bottom: 88px;
+}
+
+.arch-canvas-wrap {
+  position: relative;
+  border: 0.5px solid var(--rule-mid);
+  background: var(--paper);
+  overflow: hidden;
+}
+
+.arch-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.arch-stack {
+  display: grid;
+  grid-template-columns: 1fr;
+  border-top: 0.5px solid var(--rule-mid);
+  margin-bottom: 64px;
+}
+
+.arch-layer {
+  display: grid;
+  grid-template-columns: 200px 1fr 1.1fr;
+  gap: 56px;
+  padding: 28px 0;
+  border-bottom: 0.5px solid var(--rule);
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.arch-layer:hover {
+  background: rgba(110,236,193,0.04);
+  margin: 0 -80px;
+  padding-left: 80px;
+  padding-right: 80px;
+}
+
+.arch-layer-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--ink-light);
+}
+
+.arch-layer-name {
+  font-family: var(--display);
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: -0.2px;
+  color: var(--ink);
+}
+
+.arch-layer-desc {
+  font-family: var(--body);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-mute);
+}
+
+/* Partner grid */
+.partner-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 0.5px solid var(--rule-mid);
+}
+
+.partner-cell {
+  padding: 36px 36px 36px 0;
+  border-right: 0.5px solid var(--rule);
+}
+.partner-cell:last-child { border-right: none; padding-right: 0; }
+.partner-cell + .partner-cell { padding-left: 36px; }
+
+.partner-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 18px;
+  letter-spacing: -0.1px;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.partner-role {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink-light);
+  margin-bottom: 14px;
+}
+
+.partner-desc {
+  font-family: var(--body);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-mute);
+}
+
+/* Section closer motif */
+.motif-closer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 56px;
+}
+
+/* ── COMPLIANCE SPEC ── */
+.spec-headline {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(30px, 3.8vw, 46px);
+  line-height: 1.1;
+  letter-spacing: -0.8px;
+  color: var(--ink);
+  margin-bottom: 72px;
+}
+
+.highlight {
+  display: inline-block;
+  position: relative;
+  isolation: isolate;
+}
+.highlight-stroke {
+  display: block;
+  position: absolute;
+  top: -6px;
+  left: -10px;
+  width: calc(100% + 20px);
+  height: calc(100% + 16px);
+  pointer-events: none;
+  z-index: -1;
+  transform: rotate(-0.4deg);
+}
+
+.spec-table { border-top: 0.5px solid var(--rule-mid); }
+
+.spec-row {
+  display: grid;
+  grid-template-columns: 200px 0.8fr 1.4fr;
+  gap: 40px;
+  padding: 30px 0;
+  border-bottom: 0.5px solid var(--rule);
+  align-items: baseline;
+}
+
+.spec-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--mint-deep);
+}
+
+.spec-name {
+  font-family: var(--display);
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: -0.2px;
+  color: var(--ink);
+}
+
+.spec-desc {
+  font-family: var(--body);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-mute);
+}
+
+/* Status chips */
+.spec-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.chip {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--mint-deep);
+  background: rgba(110,236,193,0.14);
+  padding: 3px 8px;
+  border: 0.5px solid rgba(110,236,193,0.4);
+}
+
+/* ── THESIS / GUARANTEES ── */
+.thesis-h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(30px, 3.8vw, 46px);
+  line-height: 1.1;
+  letter-spacing: -1.2px;
+  color: var(--ink);
+  max-width: 28ch;
+  margin-bottom: 88px;
+}
+.thesis-h2 .other { color: var(--ink); }
+.thesis-h2 .stress { font-weight: 400; color: var(--ink-mute); display: block; }
+
+.guarantees { border-top: 0.5px solid var(--rule-mid); }
+
+.g-row {
+  display: grid;
+  grid-template-columns: 36px 130px 1fr;
+  gap: 20px;
+  padding: 24px 0;
+  border-bottom: 0.5px solid var(--rule);
+  align-items: start;
+}
+
+.g-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  color: var(--mint-deep);
+}
+
+.g-title {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+  color: var(--ink);
+}
+
+.g-body-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.g-body {
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-mute);
+  max-width: 52ch;
+}
+
+.g-detail {
+  font-family: var(--body);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-light);
+  max-width: 52ch;
+  padding-top: 4px;
+  border-top: 0.5px solid var(--rule);
+}
+
+/* ── ENGAGEMENT ── */
+.engagement-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.engagement-h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(22px, 2.8vw, 34px);
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+  max-width: 26ch;
+  margin-bottom: 20px;
+}
+
+.engagement-p {
+  font-family: var(--body);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-mute);
+  max-width: 44ch;
+  margin-bottom: 48px;
+}
+
+.action-list { border-top: 0.5px solid var(--rule-mid); }
+
+.action-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 0;
+  border-bottom: 0.5px solid var(--rule);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.action-item:hover { opacity: 0.6; }
+
+.action-left { display: flex; flex-direction: column; gap: 4px; }
+
+.action-title {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.action-email {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  color: var(--ink-light);
+}
+
+.action-arrow { font-size: 16px; color: var(--mint-deep); }
+
+.sim-box {
+  margin-top: 24px;
+  padding: 28px 32px;
+  border: 0.5px solid var(--mint);
+  background: rgba(110,236,193,0.04);
+}
+
+.sim-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.sim-title {
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.2px;
+  color: var(--ink);
+}
+
+.sim-avail {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--mint-deep);
+}
+
+.sim-avail-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--mint);
+  flex-shrink: 0;
+}
+
+.sim-desc {
+  font-family: var(--body);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-mute);
+}
+
+/* ── FOOTER SLAB ── */
+.fslab {
+  background: var(--paper);
+  padding: 72px 80px 56px;
+  border-top: 0.5px solid var(--rule-mid);
+}
+
+.fslab-inner { max-width: 1280px; margin: 0 auto; }
+
+.fslab-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 48px;
+  padding-bottom: 14px;
+}
+
+.fslab-h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(22px, 2.8vw, 38px);
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.fslab-caption {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink-light);
+}
+
+.fslab-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.btn-primary {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 15px 24px;
+  font-family: var(--body);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  transition: opacity 0.2s;
+}
+.btn-primary:hover { opacity: 0.86; }
+
+.btn-outline {
+  background: transparent;
+  color: var(--ink);
+  padding: 14px 24px;
+  font-family: var(--body);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  border: 0.5px solid var(--rule-mid);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  transition: border-color 0.2s;
+}
+.btn-outline:hover { border-color: var(--ink-mute); }
+
+.fslab-foot {
+  display: flex;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.fslab-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fslab-wordmark {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: var(--ink);
+}
+
+/* ── FOOTNOTE ── */
+.footnote {
+  padding: 16px 80px;
+  border-top: 0.5px solid var(--rule);
+}
+
+.footnote-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  font-family: var(--body);
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--ink-faint);
+  letter-spacing: 0.1px;
+}
+
+/* ── FADE IN ── */
+.fade-in {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── STATUS DOT ── */
+.status-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--mint);
+  flex-shrink: 0;
+  position: relative;
+  display: inline-block;
+}
+.status-dot::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border: 1px solid var(--mint);
+  opacity: 0.45;
+  animation: ring 2.4s ease-out infinite;
+}
+@keyframes ring {
+  0%   { transform: scale(0.8); opacity: 0.55; }
+  100% { transform: scale(2.8); opacity: 0; }
+}
+
+/* ── PLATFORMS CANVAS ── */
+.platforms-canvas-wrap {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  -webkit-mask-image: radial-gradient(ellipse 85% 85% at 50% 50%, black 60%, transparent 80%);
+  mask-image: radial-gradient(ellipse 85% 85% at 50% 50%, black 60%, transparent 80%);
+}
+.platforms-canvas-wrap canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════
+     NAV
+════════════════════════════════════ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand" aria-label="KeyStone home">
+      <svg width="19" height="26" viewBox="0 0 1935 2658" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M1691.44 1455.72C1698.53 1467.86 1705.66 1480.58 1712.83 1493.87L1795.1 1644.64C1431.34 2310.84 483.761 2658 483.761 2658V2126.37C867.062 2080.88 1617.58 1801.8 1691.44 1455.72Z" fill="#1A2E25"/>
+        <path d="M1916.17 925.456C1928.45 985.201 1935 1048.75 1935 1116.35C1935 1203.02 1924.26 1286.15 1904.72 1365.75C1875.05 1312.96 1844.98 1268.03 1814.37 1231.07C1779.91 1187.92 1742.23 1153.03 1701.39 1126.37C1788.47 1075.68 1860 1008.65 1916.17 925.456Z" fill="#1A2E25"/>
+        <path d="M0 0C397.366 0 1447.52 71.7498 1809.9 657.204C1805.19 674.195 1799.7 690.941 1793.28 707.399C1769.03 768.335 1735.83 821.691 1693.69 867.393C1651.57 913.087 1601.78 949.259 1544.33 975.916C1515.41 988.698 1485.51 998.227 1454.64 1004.57C1127.23 724.62 597.516 691.048 0 691.048V0Z" fill="#1A2E25"/>
+      </svg>
+      <span class="nav-wordmark">KEYSTONE · OS</span>
+    </a>
+    <div class="nav-right">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="#engagement" class="btn-primary" style="padding: 10px 18px; font-size: 12px;">Request a briefing →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════
+     PAGE HEADER
+════════════════════════════════════ -->
+<header>
+  <div class="page-header">
+    <canvas id="mandala-canvas" class="mandala-canvas" aria-hidden="true"></canvas>
+    <h1 class="page-h1">
+      Settle with any institution <span class="mute"><span class="highlight">on any platform.<svg class="highlight-stroke" viewBox="0 0 600 50" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><filter id="mk-h1" x="-12%" y="-15%" width="124%" height="130%"><feTurbulence type="fractalNoise" baseFrequency="0.006 0.07" numOctaves="2" seed="7" result="n"/><feColorMatrix in="n" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0 0.5" result="d"/><feDisplacementMap in="SourceGraphic" in2="d" scale="36" xChannelSelector="R" yChannelSelector="A" result="ds"/><feTurbulence type="fractalNoise" baseFrequency="0.05 1.2" numOctaves="3" seed="13" result="g"/><feColorMatrix in="g" values="0 0 0 0 0.43  0 0 0 0 0.93  0 0 0 0 0.76  0.55 0.55 0.55 0 0.42" result="t"/><feComposite in="t" in2="ds" operator="in" result="m"/><feGaussianBlur in="m" stdDeviation="0.3"/></filter></defs><rect x="0" y="4" width="600" height="42" rx="14" fill="white" filter="url(#mk-h1)"/></svg></span></span>
+    </h1>
+  </div>
+</header>
+
+<!-- ── PAGE TOC ── -->
+<nav class="page-toc" aria-label="Page sections">
+  <div class="page-toc-inner">
+    <a href="#architecture" class="toc-item">Architecture</a>
+    <a href="#platforms"   class="toc-item">For Platforms</a>
+    <a href="#compliance"   class="toc-item">Compliance</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════
+     ARCHITECTURE
+════════════════════════════════════ -->
+<section id="architecture" style="background:#F4F4F1;">
+  <div class="wrap">
+    <div class="section-eyebrow fade-in">Architecture</div>
+    <div class="arch-intro fade-in">
+      <h2 class="section-h2">Four layers. One atomic outcome.</h2>
+      <p class="section-p">
+        Once execution begins, no party can interfere, including KeyStone. Assets
+        remain with existing custodians throughout. If any condition fails at any
+        stage, all assets revert automatically. Nothing settles unless everything does.
+      </p>
+    </div>
+
+    <!-- Architecture layer diagram -->
+    <div class="fade-in" style="margin-bottom: 80px;">
+      <div class="arch-canvas-wrap">
+        <canvas id="arch-canvas" class="arch-canvas" style="height: 280px;"></canvas>
+      </div>
+    </div>
+
+    <!-- Layer table -->
+    <div class="arch-stack fade-in">
+      <div class="arch-layer">
+        <span class="arch-layer-num">Layer 1</span>
+        <span class="arch-layer-name">Settlement Engine</span>
+        <span class="arch-layer-desc">Atomic multi-leg commit across custody platforms and chains. Both sides settle or neither does, enforced at the protocol level.</span>
+      </div>
+      <div class="arch-layer">
+        <span class="arch-layer-num">Layer 2</span>
+        <span class="arch-layer-name">Compliance Rail</span>
+        <span class="arch-layer-desc">On-chain entity screening (LSEG), address risk (CipherOwl), and oracle-verified pricing (Chainlink) evaluated before any commit executes.</span>
+      </div>
+      <div class="arch-layer">
+        <span class="arch-layer-num">Layer 3</span>
+        <span class="arch-layer-name">Cross-chain Messaging</span>
+        <span class="arch-layer-desc">LayerZero passes settlement instructions across networks. Assets stay on their native chain. No bridging, no wrapped tokens.</span>
+      </div>
+      <div class="arch-layer">
+        <span class="arch-layer-num">Layer 4</span>
+        <span class="arch-layer-name">API + SDK Surface</span>
+        <span class="arch-layer-desc">REST API, typed SDKs, and a live simulation environment on testnet. Integration under NDA with dedicated technical support.</span>
+      </div>
+    </div>
+
+    <!-- Partner grid -->
+    <div class="partner-grid fade-in">
+      <div class="partner-cell">
+        <div class="partner-name"><svg width="110" height="14" viewBox="0 0 221 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="LSEG Risk Intelligence"><g opacity="0.8"><path d="M87.7839 22.7466C87.7839 24.3244 87.911 25.4189 88.0925 26.0938V26.2762C86.0316 26.9511 82.8268 27.4984 80.4753 27.4984C71.5961 27.4984 65.84 22.3088 65.84 14.3558C65.84 6.40273 71.2874 1.07637 79.6764 1.07637C82.2275 1.07637 84.815 1.54152 86.4402 2.29852V7.56103H86.2586C84.6335 6.02879 82.2094 5.12586 79.6037 5.12586C74.3107 5.12586 71.2148 8.39099 71.2148 14.1734C71.2148 19.9557 74.574 23.458 80.4299 23.458C81.2016 23.458 82.0006 23.3759 82.7541 23.2209V16.8913C80.4299 16.8913 79.1407 17.0737 77.9514 17.3017H77.7698V12.4496H77.9514C79.1679 12.6867 80.5298 12.86 83.0083 12.86H88.1743V13.0424C87.9382 13.7447 87.7839 15.1401 87.7839 16.6997V22.7466Z" fill="#1E1A1D"/><path d="M53.2206 23.3393H50.3335V15.9244H53.2206C55.9352 15.9244 57.406 16.1068 58.7678 16.3895H58.9494V11.4098H58.7678C57.3969 11.7199 55.9534 11.8749 53.2206 11.8749H50.3335V5.20786H53.3023C56.4255 5.20786 58.7769 5.54531 60.2477 6.29319H60.3748V1.4411H44.1144V1.62351C44.7318 2.69061 45.1494 4.84304 45.1494 7.04107V21.4605C45.1494 23.6859 44.7409 25.8384 44.1144 26.8781V27.0605H61.2555V21.8709H61.0739C59.1401 22.8833 56.5072 23.3211 53.2297 23.3211L53.2206 23.3393Z" fill="#1E1A1D"/><path d="M31.7487 12.2214C28.444 10.9263 26.61 10.2787 26.61 8.09896C26.61 6.12894 28.0263 5.06184 30.5594 5.06184C32.6748 5.06184 34.4815 5.80972 36.3699 7.39668H36.5515V2.20713C34.8719 1.4775 32.8109 1.1218 30.7409 1.1218C24.9577 1.1218 21.426 4.10419 21.426 8.95628C21.426 13.8084 24.7307 15.0761 28.3169 16.4715C31.6216 17.7666 33.4555 18.4142 33.4555 20.594C33.4555 22.564 31.9848 23.6037 29.3519 23.6037C26.719 23.6037 24.5491 22.6735 22.0978 20.4663H21.9162V26.0663C23.959 27.0239 26.61 27.5711 29.1158 27.5711C34.999 27.5711 38.6396 24.5888 38.6396 19.7914C38.6396 14.994 35.3621 13.6168 31.7487 12.2214Z" fill="#1E1A1D"/><path d="M8.54328 23.3394H6.21907V7.07756C6.21907 4.85217 6.62763 2.69974 7.25407 1.63264V1.45023H0V1.63264C0.617368 2.69974 1.035 4.85217 1.035 7.07756V21.497C1.035 23.7224 0.626447 25.8748 0 26.9146V27.097H16.5691V21.8618H16.3875C14.4264 22.8742 11.8208 23.3394 8.54328 23.3394Z" fill="#1E1A1D"/><path d="M105.288 9.67679C105.288 10.7256 105.479 11.7471 105.769 12.2488V12.34H102.338V12.2488C102.619 11.7471 102.819 10.7348 102.819 9.67679V2.8638C102.819 1.81495 102.619 0.793453 102.338 0.291827V0.200623H106.977C110 0.200623 111.58 1.43189 111.58 3.74848C111.58 5.37193 110.708 6.45726 109.056 6.92241C109.537 7.27811 109.837 7.72501 110.1 8.20839L111.326 10.297C111.934 11.3185 112.343 11.8657 112.797 12.2396V12.3308H110.009C109.583 12.1667 109.138 11.6924 108.675 10.7256L107.912 9.12044C107.34 7.9439 106.968 7.56996 106.26 7.56996H105.279V9.67679H105.288ZM106.977 5.76411C108.402 5.76411 109.02 5.17128 109.02 3.91265C109.02 2.65403 108.366 2.02472 106.977 2.02472H105.288V5.77323H106.977V5.76411Z" fill="#1E1A1D"/><path d="M114.259 2.85489C114.259 1.80604 114.068 0.784547 113.741 0.282921V0.191716H117.237V0.282921C116.919 0.784547 116.719 1.79692 116.719 2.85489V9.66788C116.719 10.7167 116.91 11.7382 117.237 12.2399V12.3311H113.741V12.2399C114.059 11.7382 114.259 10.7259 114.259 9.66788V2.85489Z" fill="#1E1A1D"/><path d="M119.279 11.811V9.15695H119.352C120.505 10.2058 121.504 10.6527 122.784 10.6527C124.064 10.6527 124.736 10.1693 124.736 9.22079C124.736 8.19018 123.864 7.88008 122.303 7.25989C120.596 6.60322 119.034 5.90094 119.034 3.71203C119.034 1.41367 120.705 0 123.438 0C124.436 0 125.408 0.182409 126.189 0.519866V2.98239H126.116C125.208 2.23451 124.355 1.87882 123.365 1.87882C122.176 1.87882 121.504 2.38044 121.504 3.31985C121.504 4.35046 122.375 4.66056 123.937 5.28075C125.644 5.93742 127.205 6.6397 127.205 8.82861C127.205 11.0175 125.48 12.5224 122.693 12.5224C121.504 12.5224 120.242 12.2579 119.279 11.811Z" fill="#1E1A1D"/><path d="M129.266 2.8638C129.266 1.81495 129.075 0.793453 128.784 0.291827V0.200623H132.216V0.291827C131.935 0.793453 131.735 1.80583 131.735 2.8638V5.43577L134.895 1.86967C135.376 1.31332 135.693 0.766092 135.621 0.300948V0.209744H139.407V0.300948C138.753 0.674887 138.163 1.24948 137.627 1.79671L134.023 5.56346L137.791 10.4703C138.308 11.1269 138.871 11.811 139.498 12.2579V12.3491H136.456C135.993 12.1849 135.494 11.6742 134.804 10.6892L131.735 6.35694V9.69503C131.735 10.7439 131.926 11.7654 132.216 12.267V12.3582H128.784V12.267C129.066 11.7654 129.266 10.753 129.266 9.69503V2.8638Z" fill="#1E1A1D"/><path d="M102.819 18.3049C102.819 17.2561 102.619 16.2346 102.301 15.7329V15.6417H105.797V15.7329C105.479 16.2346 105.279 17.2469 105.279 18.3049V25.1179C105.279 26.1668 105.47 27.1882 105.797 27.6899V27.7811H102.301V27.6899C102.619 27.1882 102.819 26.1759 102.819 25.1179V18.3049Z" fill="#1E1A1D"/><path d="M110.49 19.144V25.1179C110.49 26.1668 110.69 27.1882 110.972 27.6899V27.7811H107.903V27.6899C108.184 27.1882 108.384 26.1759 108.384 25.1179V18.3049C108.384 17.2561 108.193 16.2346 107.903 15.7329V15.6417H111.189L116.11 23.458V18.3049C116.11 17.2561 115.929 16.2346 115.629 15.7329V15.6417H118.698V15.7329C118.416 16.2346 118.217 17.2469 118.217 18.3049V27.7811H116.01L110.49 19.144Z" fill="#1E1A1D"/><path d="M123.438 27.6899C123.737 27.1882 123.919 26.1759 123.919 25.1179V17.4293H123.438C122.139 17.4293 121.059 17.63 120.296 18.1043H120.206V15.6417H130.12V18.1043H130.029C129.266 17.6209 128.186 17.4293 126.869 17.4293H126.388V25.1179C126.388 26.1668 126.588 27.1882 126.869 27.6899V27.7811H123.438V27.6899Z" fill="#1E1A1D"/><path d="M131.681 27.6899C131.962 27.1882 132.162 26.1759 132.162 25.1179V18.3049C132.162 17.2561 131.971 16.2346 131.681 15.7329V15.6417H139.371V17.9401H139.316C138.626 17.5844 137.501 17.4202 136.03 17.4202H134.623V20.5759H135.993C137.292 20.5759 137.982 20.4847 138.626 20.3479H138.699V22.701H138.626C137.991 22.555 137.292 22.4821 135.993 22.4821H134.623V25.9752H135.993C137.537 25.9752 138.799 25.7655 139.707 25.3003H139.798V27.7628H131.681V27.6716V27.6899Z" fill="#1E1A1D"/><path d="M141.64 27.6899C141.922 27.1882 142.122 26.1759 142.122 25.1179V18.3049C142.122 17.2561 141.931 16.2346 141.64 15.7329V15.6417H145.072V15.7329C144.791 16.2346 144.591 17.2469 144.591 18.3049V25.9935H145.69C147.233 25.9935 148.459 25.7837 149.403 25.3003H149.494V27.7811H141.64V27.6899Z" fill="#1E1A1D"/><path d="M151.038 27.6899C151.319 27.1882 151.519 26.1759 151.519 25.1179V18.3049C151.519 17.2561 151.328 16.2346 151.038 15.7329V15.6417H154.469V15.7329C154.188 16.2346 153.988 17.2469 153.988 18.3049V25.9935H155.087C156.63 25.9935 157.856 25.7837 158.8 25.3003H158.891V27.7811H151.038V27.6899Z" fill="#1E1A1D"/><path d="M160.915 18.3049C160.915 17.2561 160.724 16.2346 160.398 15.7329V15.6417H163.893V15.7329C163.575 16.2346 163.375 17.2469 163.375 18.3049V25.1179C163.375 26.1668 163.566 27.1882 163.893 27.6899V27.7811H160.398V27.6899C160.715 27.1882 160.915 26.1759 160.915 25.1179V18.3049Z" fill="#1E1A1D"/><path d="M165.8 21.7525C165.8 17.8945 168.378 15.4502 172.355 15.4502C173.562 15.4502 174.788 15.6782 175.551 16.0431V18.5238H175.478C174.697 17.8124 173.562 17.3838 172.318 17.3838C169.813 17.3838 168.342 18.9343 168.342 21.6704C168.342 24.4065 169.94 26.0756 172.709 26.0756C173.081 26.0756 173.453 26.0391 173.807 25.9661V22.9655C172.709 22.9655 172.082 23.0385 171.538 23.1662H171.447V20.8678H171.538C172.11 20.9772 172.763 21.0684 173.934 21.0684H176.386V21.1414C176.241 21.4606 176.195 22.1447 176.195 22.8743V25.7472C176.195 26.4951 176.25 27.015 176.34 27.3342V27.4072C175.36 27.7264 173.835 28 172.736 28C168.523 28 165.809 25.5375 165.809 21.7707L165.8 21.7525Z" fill="#1E1A1D"/><path d="M178.446 27.6899C178.728 27.1882 178.928 26.1759 178.928 25.1179V18.3049C178.928 17.2561 178.728 16.2346 178.446 15.7329V15.6417H186.136V17.9401H186.082C185.392 17.5844 184.266 17.4202 182.795 17.4202H181.388V20.5759H182.759C184.057 20.5759 184.747 20.4847 185.392 20.3479H185.464V22.701H185.392C184.756 22.555 184.057 22.4821 182.759 22.4821H181.388V25.9752H182.759C184.302 25.9752 185.564 25.7655 186.472 25.3003H186.563V27.7628H178.446V27.6716V27.6899Z" fill="#1E1A1D"/><path d="M191.003 19.144V25.1179C191.003 26.1668 191.203 27.1882 191.484 27.6899V27.7811H188.415V27.6899C188.697 27.1882 188.897 26.1759 188.897 25.1179V18.3049C188.897 17.2561 188.697 16.2346 188.415 15.7329V15.6417H191.702L196.623 23.458V18.3049C196.623 17.2561 196.441 16.2346 196.142 15.7329V15.6417H199.21V15.7329C198.929 16.2346 198.729 17.2469 198.729 18.3049V27.7811H196.523L191.003 19.144Z" fill="#1E1A1D"/><path d="M201.107 21.7525C201.107 17.9675 203.613 15.4502 207.381 15.4502C208.643 15.4502 209.887 15.6965 210.858 16.2164V18.7336H210.767C209.859 17.8033 208.616 17.3747 207.372 17.3747C205.048 17.3747 203.622 19.0163 203.622 21.6613C203.622 24.3062 205.057 26.0482 207.408 26.0482C208.652 26.0482 209.859 25.5284 210.767 24.6072H210.858V27.2156C209.878 27.699 208.625 27.9818 207.363 27.9818C203.613 27.9818 201.107 25.4827 201.107 21.7525Z" fill="#1E1A1D"/><path d="M212.883 27.6899C213.165 27.1882 213.365 26.1759 213.365 25.1179V18.3049C213.365 17.2561 213.165 16.2346 212.883 15.7329V15.6417H220.573V17.9401H220.519C219.829 17.5844 218.703 17.4202 217.232 17.4202H215.825V20.5759H217.196C218.494 20.5759 219.184 20.4847 219.829 20.3479H219.901V22.701H219.829C219.193 22.555 218.494 22.4821 217.196 22.4821H215.825V25.9752H217.196C218.739 25.9752 220.001 25.7655 220.909 25.3003H221V27.7628H212.883V27.6716V27.6899Z" fill="#1E1A1D"/></g></svg></div>
+        <div class="partner-role">Entity Diligence</div>
+        <div class="partner-desc">World-Check integration for counterparty KYC and sanctions screening at settlement time.</div>
+      </div>
+      <div class="partner-cell">
+        <div class="partner-name"><svg width="86" height="22" viewBox="0 0 195 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="CipherOwl"><g opacity="0.8"><path d="M75.7003 34.2713C73.929 34.2713 72.3486 33.8538 70.9593 33.0187C69.5873 32.166 68.5193 30.9934 67.7552 29.501C66.9911 28.0087 66.609 26.3032 66.609 24.3845C66.609 22.4657 66.9998 20.769 67.7812 19.2945C68.5801 17.8021 69.6742 16.6473 71.0635 15.8301C72.4528 14.9951 74.0244 14.5775 75.7785 14.5775C77.0983 14.5775 78.3226 14.8263 79.4514 15.3238C80.5803 15.8034 81.5441 16.4874 82.3429 17.3757C83.1592 18.2641 83.7583 19.3122 84.1404 20.5203L82.4472 21.2665C81.9782 19.7208 81.1533 18.5128 79.9724 17.6422C78.7915 16.7539 77.3849 16.3098 75.7524 16.3098C74.3284 16.3098 73.0693 16.6384 71.9752 17.2957C70.8812 17.9532 70.0215 18.8947 69.3964 20.1206C68.7885 21.3465 68.4846 22.7588 68.4846 24.3578C68.4846 25.9923 68.7798 27.4314 69.3703 28.6749C69.9781 29.9008 70.829 30.8513 71.9232 31.5264C73.0172 32.2015 74.285 32.539 75.7263 32.539C77.2026 32.539 78.4702 32.1749 79.5296 31.4465C80.6064 30.7181 81.4399 29.6521 82.0303 28.2486L83.6455 29.1013C82.9508 30.7536 81.9175 32.0327 80.5455 32.9388C79.1736 33.8271 77.5586 34.2713 75.7003 34.2713Z" fill="#1E1A1D"/><path d="M87.4256 20.4137H89.2229V33.8715H87.4256V20.4137ZM88.3373 17.5622C87.9379 17.5622 87.5905 17.4201 87.2953 17.1358C87.0174 16.8516 86.8785 16.4963 86.8785 16.0699C86.8785 15.6613 87.0174 15.3149 87.2953 15.0306C87.5905 14.7463 87.9379 14.6042 88.3373 14.6042C88.7193 14.6042 89.058 14.7463 89.3533 15.0306C89.6485 15.3149 89.7961 15.6613 89.7961 16.0699C89.7961 16.4963 89.6485 16.8516 89.3533 17.1358C89.0753 17.4201 88.7367 17.5622 88.3373 17.5622Z" fill="#1E1A1D"/><path d="M93.4804 20.4137H95.2257V22.7056H95.2779C95.7989 21.8706 96.4761 21.2132 97.3094 20.7335C98.1609 20.2538 99.1156 20.014 100.176 20.014C101.374 20.014 102.424 20.316 103.327 20.92C104.247 21.5241 104.96 22.368 105.463 23.4517C105.984 24.5355 106.245 25.7968 106.245 27.2359C106.245 28.6394 105.993 29.8741 105.489 30.9402C104.986 32.0061 104.265 32.8322 103.327 33.4185C102.406 33.987 101.339 34.2713 100.123 34.2713C99.411 34.2713 98.742 34.1558 98.1174 33.9249C97.4919 33.7117 96.9358 33.4096 96.4501 33.0187C95.9638 32.6101 95.5904 32.1482 95.3299 31.633H95.2779V39.681H93.4804V20.4137ZM99.941 32.619C100.844 32.619 101.634 32.4058 102.311 31.9794C102.989 31.5353 103.51 30.9046 103.874 30.0873C104.256 29.2701 104.447 28.3196 104.447 27.2359C104.447 26.0989 104.256 25.1129 103.874 24.2779C103.51 23.4428 102.98 22.8033 102.285 22.3591C101.591 21.8972 100.791 21.6663 99.8888 21.6663C98.9679 21.6663 98.1609 21.8883 97.4658 22.3325C96.7717 22.7588 96.233 23.3895 95.8509 24.2246C95.4688 25.0418 95.2779 26.0189 95.2779 27.1559C95.2779 28.293 95.4775 29.279 95.877 30.114C96.2764 30.9313 96.8239 31.5531 97.5179 31.9794C98.2304 32.4058 99.0374 32.619 99.941 32.619Z" fill="#1E1A1D"/><path d="M109.608 14.7107H111.38V22.892H111.432C111.918 21.9504 112.587 21.2398 113.438 20.7601C114.288 20.2626 115.227 20.0139 116.251 20.0139C117.171 20.0139 117.996 20.2271 118.725 20.6535C119.455 21.0622 120.028 21.6573 120.445 22.439C120.862 23.2207 121.07 24.1535 121.07 25.2372V33.8715H119.299V25.6102C119.299 24.7397 119.142 24.0112 118.829 23.425C118.535 22.8387 118.127 22.4035 117.605 22.1192C117.084 21.835 116.477 21.6928 115.782 21.6928C114.949 21.6928 114.193 21.906 113.516 22.3324C112.856 22.741 112.335 23.3362 111.952 24.1178C111.571 24.8819 111.38 25.779 111.38 26.8094V33.8715H109.608V14.7107Z" fill="#1E1A1D"/><path d="M130.727 34.2713C129.407 34.2713 128.251 33.987 127.262 33.4185C126.289 32.8322 125.543 32.015 125.021 30.9668C124.5 29.9008 124.24 28.6572 124.24 27.2359C124.24 25.7791 124.509 24.5089 125.048 23.4251C125.586 22.3236 126.341 21.4797 127.314 20.8934C128.286 20.3071 129.423 20.014 130.727 20.014C132.064 20.014 133.201 20.316 134.139 20.92C135.094 21.5064 135.815 22.3147 136.301 23.3451C136.804 24.3756 137.056 25.5392 137.056 26.8361C137.056 26.925 137.056 27.0227 137.056 27.1293C137.056 27.2181 137.048 27.3159 137.03 27.4225H125.621V25.9567H135.077C135.059 25.1573 134.877 24.4378 134.529 23.7981C134.2 23.1408 133.713 22.6256 133.071 22.2525C132.429 21.8617 131.655 21.6663 130.753 21.6663C129.78 21.6663 128.938 21.8795 128.225 22.3058C127.531 22.7144 126.993 23.3273 126.61 24.1446C126.228 24.9619 126.037 25.9479 126.037 27.1026C126.037 28.2397 126.228 29.2257 126.61 30.0607C127.01 30.878 127.557 31.5087 128.251 31.9528C128.964 32.3969 129.788 32.619 130.727 32.619C131.664 32.619 132.498 32.3881 133.227 31.9261C133.957 31.4465 134.521 30.7447 134.92 29.8208L136.483 30.7003C135.893 31.9084 135.103 32.8055 134.113 33.3918C133.14 33.9782 132.012 34.2713 130.727 34.2713Z" fill="#1E1A1D"/><path d="M140.238 20.4137H141.983V22.4924H142.061C142.426 21.6929 142.912 21.08 143.52 20.6535C144.128 20.2272 144.839 20.014 145.656 20.014C146.142 20.014 146.585 20.1028 146.984 20.2805C147.384 20.4404 147.713 20.698 147.974 21.0534C148.252 21.4087 148.426 21.8706 148.495 22.4391L146.932 23.3984C146.845 22.7944 146.628 22.3591 146.281 22.0926C145.951 21.8262 145.543 21.6929 145.057 21.6929C144.448 21.6929 143.911 21.8883 143.442 22.2792C142.99 22.67 142.642 23.2119 142.4 23.9047C142.157 24.5977 142.035 25.3794 142.035 26.2499V33.8716H140.238V20.4137Z" fill="#1E1A1D"/><path d="M159.673 34.2713C157.885 34.2713 156.304 33.8627 154.933 33.0454C153.578 32.2104 152.518 31.0556 151.755 29.581C151.007 28.0887 150.634 26.3831 150.634 24.4644C150.634 22.5457 151.016 20.8401 151.781 19.3478C152.544 17.8376 153.613 16.6651 154.985 15.8301C156.356 14.9951 157.919 14.5775 159.673 14.5775C161.41 14.5775 162.956 14.9951 164.31 15.8301C165.682 16.6651 166.75 17.8287 167.514 19.3211C168.296 20.8134 168.687 22.5012 168.687 24.3845C168.687 26.2854 168.305 27.9821 167.54 29.4744C166.776 30.9668 165.708 32.1393 164.336 32.9921C162.982 33.8449 161.427 34.2713 159.673 34.2713ZM159.673 32.539C161.097 32.539 162.347 32.2015 163.425 31.5264C164.518 30.8513 165.361 29.9008 165.951 28.6749C166.542 27.4314 166.837 26.01 166.837 24.4111C166.837 22.8121 166.542 21.3998 165.951 20.1739C165.361 18.948 164.527 17.9976 163.451 17.3224C162.373 16.6473 161.115 16.3098 159.673 16.3098C158.215 16.3098 156.947 16.6473 155.87 17.3224C154.794 17.9976 153.96 18.948 153.37 20.1739C152.796 21.3998 152.51 22.8121 152.51 24.4111C152.51 26.01 152.796 27.4314 153.37 28.6749C153.96 29.9008 154.794 30.8513 155.87 31.5264C156.965 32.2015 158.232 32.539 159.673 32.539Z" fill="#1E1A1D"/><path d="M170.928 20.4136H172.699L176.215 31.5263H176.293L179.862 20.3336H181.555L185.255 31.5263H185.359L188.876 20.4136H190.569L186.297 33.8714H184.265L180.748 23.2917H180.618L177.232 33.8714H175.173L170.928 20.4136Z" fill="#1E1A1D"/><path d="M193.203 14.7107H195V33.8715H193.203V14.7107Z" fill="#1E1A1D"/><path d="M35.3445 25.0194H53.5888C53.5888 24.0234 53.5376 23.0447 53.448 22.0744L35.2805 23.7788C35.3188 24.1866 35.3445 24.6029 35.3445 25.0194Z" fill="#1E1A1D"/><path d="M34.7443 21.559L48.3252 16.8067C47.6554 14.8749 46.7593 13.0504 45.667 11.3675L33.6307 19.2623C34.0872 19.9706 34.4627 20.7433 34.7443 21.559Z" fill="#1E1A1D"/><path d="M35.2861 26.2644L53.4537 27.9687C53.5433 26.9986 53.5944 26.0154 53.5944 25.0238H35.3501C35.3501 25.4402 35.3202 25.8566 35.2861 26.2644Z" fill="#1E1A1D"/><path d="M33.625 30.7803L45.6613 38.6751C46.7536 36.9922 47.6496 35.1677 48.3195 33.2359L34.7429 28.488C34.4612 29.2993 34.0858 30.0721 33.625 30.7803Z" fill="#1E1A1D"/><path d="M27.6908 35.1722C26.8204 35.4168 25.9073 35.5586 24.9644 35.5714C24.926 35.5714 24.8833 35.5756 24.8449 35.5756C23.8294 35.5756 22.8524 35.4212 21.9222 35.1506C21.6919 35.082 21.4657 35.0047 21.2438 34.9232C21.1798 34.9017 21.1158 34.8759 21.0561 34.8545C20.8471 34.7729 20.6422 34.6827 20.4374 34.5883C20.3691 34.5539 20.3009 34.5239 20.2326 34.4895C20.0321 34.3909 19.8359 34.2877 19.6395 34.1762C19.5884 34.1461 19.5371 34.1118 19.4859 34.0817C18.8758 33.7168 18.3083 33.2918 17.7878 32.811C17.7153 32.7423 17.6385 32.6779 17.5702 32.6092C17.4379 32.4847 17.3142 32.3517 17.1904 32.2186C17.1009 32.1241 17.0155 32.0253 16.9302 31.9309C16.8193 31.8022 16.7126 31.6733 16.6102 31.5403C16.5163 31.4244 16.431 31.3042 16.3457 31.1796C16.2561 31.0552 16.1665 30.9306 16.0812 30.7977C15.9787 30.6388 15.8849 30.4757 15.791 30.3125C15.7313 30.2095 15.6673 30.1107 15.6118 30.0035C15.4711 29.7373 15.3387 29.4668 15.2193 29.1878C15.1766 29.089 15.1424 28.986 15.0998 28.883C15.023 28.6855 14.9504 28.4923 14.8822 28.2905C14.8438 28.1746 14.8139 28.0587 14.7798 27.9428C14.7244 27.7454 14.6731 27.5479 14.6262 27.3418C14.6006 27.2259 14.575 27.11 14.5537 26.9898C14.511 26.7708 14.4811 26.5476 14.4513 26.3201C14.4385 26.217 14.4213 26.1183 14.4128 26.0153C14.383 25.6847 14.3617 25.3541 14.3617 25.015C14.3617 24.6758 14.383 24.3453 14.4128 24.0148C14.4213 23.9117 14.4385 23.8129 14.4513 23.71C14.4768 23.4867 14.511 23.2635 14.5537 23.0402C14.575 22.9201 14.6006 22.8042 14.6262 22.6882C14.6731 22.4864 14.7244 22.2847 14.7798 22.0873C14.8139 21.9713 14.848 21.8511 14.8822 21.7395C14.9462 21.5377 15.023 21.3403 15.0998 21.1471C15.1382 21.044 15.1766 20.941 15.2193 20.8422C15.3387 20.5632 15.4667 20.2928 15.6118 20.0267C15.6673 19.9235 15.7313 19.8205 15.791 19.7175C15.8849 19.5543 15.9787 19.3913 16.0812 19.2324C16.1665 19.1036 16.2561 18.9792 16.3457 18.8503C16.431 18.7302 16.5206 18.61 16.6102 18.4898C16.7126 18.3566 16.8193 18.2278 16.9302 18.0991C17.0155 18.0003 17.1052 17.9059 17.1904 17.8115C17.3142 17.6783 17.4379 17.5453 17.5702 17.4208C17.6428 17.3521 17.7153 17.2877 17.7878 17.219C18.3083 16.7426 18.8758 16.3132 19.4859 15.9483C19.5371 15.9182 19.5884 15.8839 19.6395 15.8539C19.8315 15.7423 20.0321 15.6392 20.2326 15.5405C20.3009 15.5061 20.3691 15.4717 20.4374 15.4417C20.6422 15.3473 20.8471 15.2571 21.0561 15.1756C21.1201 15.1498 21.1841 15.1283 21.2438 15.1069C21.4657 15.0253 21.6919 14.9438 21.9222 14.8794C22.8524 14.6089 23.8294 14.4544 24.8449 14.4544C24.8833 14.4544 24.926 14.4544 24.9644 14.4544C25.9073 14.4672 26.8204 14.6089 27.6908 14.8536L31.5949 0.940157C29.4828 0.343436 27.2599 0.0128786 24.9644 0C24.926 0 24.8833 0 24.8449 0C23.855 0 22.8822 0.0643937 21.9222 0.176011C21.8668 0.180304 21.8113 0.188889 21.7559 0.193183C21.4358 0.231819 21.1201 0.274749 20.8043 0.326264C20.7574 0.33485 20.7105 0.343436 20.6636 0.352022C18.4619 0.7298 16.3585 1.39521 14.3915 2.3139C14.3488 2.33536 14.3062 2.35253 14.2635 2.36971C13.9904 2.4985 13.7216 2.63587 13.4571 2.77325C13.3803 2.81188 13.3035 2.85052 13.2267 2.89344C12.9792 3.02653 12.7404 3.15961 12.4971 3.30128C12.4033 3.35708 12.3094 3.4086 12.2155 3.46441C11.9894 3.59749 11.7675 3.73916 11.5457 3.88083C11.4432 3.94522 11.3408 4.01391 11.2385 4.07831C11.0294 4.21568 10.8203 4.36164 10.6155 4.5033C10.5046 4.58058 10.398 4.65785 10.2913 4.73512C10.0949 4.87679 9.89868 5.02276 9.70677 5.173C9.59575 5.25886 9.48483 5.34902 9.37391 5.43488C9.18619 5.58512 9.00273 5.73541 8.8235 5.88561C8.71258 5.98005 8.60167 6.07882 8.49069 6.17754C8.31578 6.33209 8.14512 6.48235 7.97446 6.64118C7.85924 6.7485 7.74831 6.85582 7.63739 6.96315C7.47523 7.1177 7.31308 7.27657 7.15523 7.43539C7.04005 7.55127 6.92907 7.67149 6.81816 7.79171C6.66881 7.95052 6.51952 8.1094 6.37442 8.26823C6.25925 8.39699 6.14402 8.53437 6.03311 8.66748C5.89657 8.8263 5.76003 8.98084 5.63202 9.13967C5.49976 9.30282 5.37602 9.46597 5.24803 9.63335C5.07736 9.85233 4.91096 10.0756 4.74455 10.303C4.58242 10.5263 4.42455 10.7452 4.27095 10.9727C4.18561 11.0973 4.10882 11.2261 4.02348 11.3549C3.89549 11.5523 3.76322 11.7541 3.63949 11.9558C3.55842 12.0932 3.47735 12.2306 3.39628 12.3722C3.28108 12.5698 3.16588 12.7672 3.05495 12.969C2.97815 13.1107 2.90134 13.2567 2.82882 13.4025C2.72215 13.6043 2.61974 13.8061 2.51735 14.0122C2.44481 14.1582 2.37654 14.3084 2.30828 14.4544C2.21014 14.6604 2.11627 14.8708 2.02668 15.0811C1.96268 15.2314 1.89868 15.3859 1.83894 15.5361C1.75361 15.7508 1.66828 15.9612 1.58721 16.1801C1.52747 16.3346 1.47201 16.4892 1.42081 16.6438C1.34401 16.8628 1.27147 17.0816 1.19894 17.3049C1.14774 17.4595 1.10081 17.6183 1.05387 17.7771C0.985601 18.0003 0.921606 18.2278 0.861872 18.4554C0.819205 18.6142 0.776538 18.7688 0.738138 18.9276C0.678404 19.1594 0.6272 19.3955 0.576003 19.6317C0.541869 19.7862 0.507736 19.9407 0.477869 20.0997C0.430935 20.3442 0.388269 20.5933 0.345601 20.838C0.320001 20.9882 0.294401 21.1428 0.268801 21.293C0.230401 21.5549 0.200535 21.8167 0.170668 22.0829C0.1536 22.2246 0.136534 22.3663 0.119468 22.5079C0.0896004 22.8042 0.0682672 23.1046 0.0512002 23.4052C0.0426668 23.5167 0.0341334 23.6241 0.0298668 23.7357C0.00853337 24.1478 0 24.5642 0 24.985C0 25.4057 0.0128001 25.8178 0.0298668 26.2299C0.0384002 26.363 0.0512002 26.4918 0.055467 26.6249C0.0725339 26.904 0.0896004 27.1786 0.119468 27.4534C0.136534 27.6208 0.157867 27.7839 0.1792 27.9471C0.209067 28.1833 0.234667 28.4237 0.268801 28.6597C0.294401 28.8401 0.328535 29.016 0.358402 29.192C0.396801 29.411 0.430935 29.63 0.473603 29.8489C0.507736 30.0335 0.550403 30.2181 0.5888 30.4027C0.635736 30.6087 0.678404 30.8104 0.729601 31.0166C0.776538 31.2054 0.827735 31.3943 0.878939 31.5832C0.930136 31.7764 0.985601 31.9696 1.04107 32.1585C1.09654 32.3517 1.15627 32.5405 1.22028 32.7337C1.28001 32.914 1.33974 33.0944 1.40374 33.2746C1.47201 33.4721 1.54028 33.6654 1.61281 33.8585C1.67681 34.0259 1.74507 34.1977 1.80907 34.3607C1.89014 34.5583 1.97121 34.7557 2.05655 34.9532C2.12481 35.1078 2.19308 35.2622 2.26561 35.4168C2.35947 35.6186 2.45335 35.8247 2.55148 36.0222C2.61974 36.1595 2.68801 36.2925 2.75628 36.4257C2.86722 36.6403 2.97388 36.8506 3.08908 37.061C3.14882 37.1684 3.20855 37.2714 3.26828 37.3788C3.40054 37.6106 3.53282 37.8466 3.67361 38.0742C3.70349 38.1214 3.73335 38.1686 3.76322 38.2159C4.71043 39.7442 5.81976 41.1608 7.06137 42.4401C7.07418 42.453 7.08268 42.4659 7.09549 42.4787C7.33444 42.7234 7.57765 42.9639 7.82936 43.2C7.85498 43.2215 7.87629 43.2472 7.90191 43.2687C8.14937 43.5005 8.39683 43.7236 8.65285 43.947C8.67847 43.9727 8.70828 43.9942 8.7339 44.0199C8.98992 44.2388 9.25019 44.4535 9.51895 44.6639C9.54457 44.6853 9.57445 44.7067 9.60006 44.7282C9.86885 44.9386 10.1462 45.1446 10.4234 45.3465C10.4449 45.3593 10.462 45.3765 10.4832 45.3894C10.7734 45.5954 11.0635 45.7972 11.3622 45.9904C11.3622 45.9946 11.375 45.999 11.3792 46.0032C15.262 48.5275 19.8828 50 24.8492 50C24.8876 50 24.9302 49.9957 24.9686 49.9957C27.2684 49.9786 29.487 49.6522 31.5991 49.0555L27.6908 35.1722Z" fill="#1E1A1D"/><path d="M29.9861 34.2151L37.0347 46.8148C38.7712 45.8275 40.3797 44.6383 41.8262 43.2731L32.0043 32.721C31.3942 33.2921 30.72 33.7987 29.9861 34.2151Z" fill="#1E1A1D"/><path d="M32.0124 17.3265L41.8172 6.75727C40.358 5.3878 38.7453 4.20724 37.013 3.22845L29.9814 15.8411C30.7154 16.2532 31.3981 16.747 32.0124 17.3265Z" fill="#1E1A1D"/></g></svg></div>
+        <div class="partner-role">Address Screening</div>
+        <div class="partner-desc">On-chain address risk classification before any transfer is committed to the ledger.</div>
+      </div>
+      <div class="partner-cell">
+        <div class="partner-name"><svg width="87" height="22" viewBox="0 0 197 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Chainlink"><g opacity="0.8"><path d="M21.6113 0L0 12.5V37.5L21.6113 50L43.2226 37.5V12.5L21.6113 0ZM34.067 32.202L21.6154 39.404L9.16358 32.202V17.798L21.6154 10.596L34.067 17.798V32.202Z" fill="#1E1A1D"/><path d="M66.9343 37.5261C64.7882 37.5261 62.8657 37.0341 61.1725 36.0441C59.4777 35.0561 58.14 33.63 57.1599 31.7621C56.1796 29.894 55.6904 27.6461 55.6904 25.0161C55.6904 22.3861 56.1856 20.102 57.1697 18.228C58.156 16.356 59.4977 14.928 61.1985 13.946C62.8976 12.964 64.8101 12.474 66.9364 12.474C68.3177 12.474 69.6075 12.672 70.7933 13.064C71.9813 13.456 73.0374 14.026 73.9636 14.774C74.8901 15.522 75.6427 16.436 76.2277 17.516C76.8106 18.596 77.188 19.824 77.3637 21.2019H72.5423C72.4324 20.504 72.2209 19.88 71.9055 19.326C71.5879 18.776 71.1886 18.306 70.7056 17.918C70.2204 17.53 69.6695 17.236 69.0565 17.034C68.4396 16.832 67.7689 16.732 67.0382 16.732C65.7525 16.732 64.6206 17.054 63.6383 17.698C62.658 18.342 61.8913 19.28 61.3423 20.514C60.7913 21.746 60.5157 23.2499 60.5157 25.0161C60.5157 26.782 60.7932 28.316 61.3482 29.5441C61.9054 30.7719 62.668 31.6981 63.6443 32.326C64.6206 32.9541 65.7465 33.2679 67.0182 33.2679C67.727 33.2679 68.3857 33.1719 68.9946 32.9799C69.6035 32.79 70.1525 32.5101 70.6376 32.144C71.1209 31.78 71.5281 31.332 71.8554 30.802C72.183 30.272 72.4126 29.664 72.5423 28.978H77.3637C77.2219 30.122 76.8824 31.2099 76.3434 32.236C75.8043 33.2601 75.0858 34.17 74.1853 34.9601C73.287 35.752 72.2288 36.3739 71.015 36.8361C69.7992 37.2939 68.4396 37.5239 66.9383 37.5239V37.5301L66.9343 37.5261Z" fill="#1E1A1D"/><path d="M84.6188 26.546V37.1881H79.9452V12.7921H84.4889V22.0741H84.7185C85.1419 21.0161 85.8087 20.1801 86.713 19.5681C87.6153 18.9581 88.7673 18.6501 90.1608 18.6501C91.4245 18.6501 92.5326 18.9221 93.477 19.4681C94.4251 20.0141 95.1618 20.8001 95.6829 21.826C96.206 22.8501 96.4656 24.092 96.4656 25.5441V37.1841H91.774V26.3301C91.774 25.1501 91.4744 24.232 90.8755 23.57C90.2766 22.9101 89.4301 22.58 88.342 22.58C87.6113 22.58 86.9685 22.7381 86.4135 23.056C85.8566 23.3741 85.4194 23.8241 85.0978 24.4061C84.7764 24.992 84.6167 25.7001 84.6167 26.5441V26.5482L84.6188 26.546Z" fill="#1E1A1D"/><path d="M104.774 37.5502C103.608 37.5502 102.566 37.3421 101.646 36.928C100.725 36.5122 100.001 35.8982 99.4717 35.0861C98.9427 34.2741 98.6792 33.266 98.6792 32.0661C98.6792 31.042 98.8669 30.1882 99.2442 29.5102C99.6214 28.8321 100.133 28.2861 100.781 27.866C101.43 27.4462 102.163 27.1281 102.987 26.9162C103.81 26.7041 104.674 26.5541 105.577 26.466C106.645 26.3561 107.505 26.2561 108.16 26.1641C108.815 26.0722 109.29 25.9241 109.59 25.7221C109.889 25.52 110.039 25.2222 110.039 24.83V24.7481C110.039 23.9282 109.787 23.2922 109.288 22.8401C108.787 22.3882 108.072 22.1601 107.146 22.1601C106.166 22.1601 105.387 22.3741 104.808 22.8081C104.231 23.2382 103.846 23.7601 103.648 24.37L99.3 23.894C99.5716 22.782 100.067 21.8341 100.779 21.0541C101.492 20.2741 102.389 19.6781 103.467 19.2681C104.545 18.8581 105.771 18.6521 107.144 18.6521C108.092 18.6521 109.017 18.7641 109.915 18.9881C110.814 19.2101 111.624 19.5661 112.351 20.0541C113.073 20.5401 113.654 21.1821 114.082 21.9781C114.511 22.7761 114.728 23.7462 114.728 24.894V37.1881H110.252V34.65H110.123C109.837 35.1941 109.46 35.688 108.979 36.126C108.5 36.564 107.911 36.9082 107.214 37.1661C106.517 37.4241 105.705 37.5521 104.778 37.5521H104.772L104.774 37.5502ZM106.046 34.2101C106.852 34.2101 107.555 34.0501 108.154 33.7281C108.753 33.4062 109.222 32.9761 109.56 32.4361C109.897 31.8961 110.067 31.2981 110.067 30.6441V28.5961C109.915 28.706 109.689 28.8042 109.398 28.8921C109.102 28.9802 108.771 29.0602 108.4 29.1302C108.03 29.2001 107.663 29.262 107.304 29.3181C106.944 29.3721 106.623 29.4161 106.339 29.4481C105.719 29.5362 105.171 29.6781 104.696 29.872C104.221 30.0702 103.848 30.336 103.576 30.6742C103.305 31.0122 103.167 31.438 103.167 31.9522C103.167 32.694 103.437 33.256 103.976 33.64C104.515 34.0222 105.203 34.212 106.042 34.212H106.044L106.046 34.2101Z" fill="#1E1A1D"/><path d="M130.221 26.546V37.1881H125.547V18.8821H130.139V22.0741H130.336C130.75 21.0261 131.406 20.1941 132.305 19.5761C133.203 18.9581 134.333 18.6521 135.697 18.6521C136.96 18.6521 138.065 18.9241 139.005 19.4701C139.947 20.0141 140.678 20.8041 141.197 21.8341C141.714 22.8661 141.973 24.1021 141.973 25.5422V37.1821H137.3V26.3282C137.3 25.1601 136.998 24.242 136.394 23.5781C135.791 22.9141 134.958 22.5781 133.9 22.5781C133.181 22.5781 132.544 22.7362 131.995 23.0541C131.444 23.3722 131.013 23.8221 130.696 24.4042C130.378 24.99 130.222 25.6982 130.222 26.5422V26.546H130.221Z" fill="#1E1A1D"/><path d="M149.717 11.592V37.19H145.043V11.592H149.717Z" fill="#1E1A1D"/><path d="M165.207 37.1881H160.533V18.8821H165.125V22.0741H165.323C165.736 21.0261 166.393 20.1941 167.291 19.5761C168.19 18.9581 169.32 18.6521 170.683 18.6521C171.947 18.6521 173.051 18.9241 173.993 19.4701C174.935 20.0141 175.666 20.8041 176.183 21.8341C176.7 22.8661 176.96 24.1021 176.96 25.5422V37.1821H172.286V26.3282C172.286 25.1601 171.985 24.242 171.38 23.5781C170.777 22.9141 169.944 22.5781 168.886 22.5781C168.168 22.5781 167.531 22.7362 166.982 23.0541C166.431 23.3722 166 23.8221 165.682 24.4042C165.365 24.99 165.207 25.6982 165.207 26.5422V37.1881Z" fill="#1E1A1D"/><path d="M191.458 37.19H197L189.703 26.8121L196.623 18.884H191.198L185.001 26.0402H184.71V12.7921H180.034V37.19H184.71V31.214L186.175 29.5861L191.458 37.1881V37.19Z" fill="#1E1A1D"/><path d="M122.509 11.592H117.836V16.274H122.509V11.592Z" fill="#1E1A1D"/><path d="M157.502 11.592H152.828V16.274H157.502V11.592Z" fill="#1E1A1D"/><path d="M117.799 37.19V18.8859H122.473V37.19H117.799Z" fill="#1E1A1D"/><path d="M152.787 37.1901V18.886H157.461V37.1901H152.787Z" fill="#1E1A1D"/></g></svg></div>
+        <div class="partner-role">Oracle &amp; Pricing</div>
+        <div class="partner-desc">Tamper-resistant price feeds and cross-chain data for collateral valuation and DvP matching.</div>
+      </div>
+      <div class="partner-cell">
+        <div class="partner-name"><svg width="81" height="22" viewBox="0 0 140 38" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="LayerZero"><g opacity="0.8"><g clip-path="url(#lz-p-clip0)"><g clip-path="url(#lz-p-clip1)"><path d="M10.63 9.29068e-07C9.22651 0.00700034 7.83816 0.291874 6.54422 0.838403C5.25029 1.38493 4.07611 2.18245 3.08875 3.18529C2.10138 4.18813 1.32016 5.37671 0.789707 6.68313C0.259255 7.98956 -0.010029 9.38825 -0.00278742 10.7993V14.3665H8.63639V9.19843C8.63629 8.95572 8.68376 8.71538 8.77608 8.49112C8.86839 8.26687 9.00376 8.06311 9.17443 7.89147C9.3451 7.71983 9.54776 7.58375 9.77077 7.49088C9.9938 7.39801 10.2328 7.35025 10.4742 7.3503H10.7857C11.0271 7.35025 11.2662 7.39802 11.4892 7.49088C11.7122 7.58375 11.9149 7.71983 12.0857 7.89147C12.2563 8.0631 12.3917 8.26687 12.4841 8.49112C12.5764 8.71538 12.6239 8.95571 12.6239 9.19843V23.0526C13.7584 23.0526 14.8819 22.8279 15.93 22.3915C16.9782 21.9549 17.9306 21.3151 18.7329 20.5086C19.5351 19.702 20.1714 18.7444 20.6056 17.6906C21.0397 16.6367 21.2631 15.5071 21.2631 14.3665V10.7993C21.2692 7.9403 20.1495 5.19505 18.1486 3.16358C17.1668 2.1611 15.9964 1.36512 14.7055 0.821981C13.4148 0.278848 12.0293 -0.000588033 10.63 9.29068e-07Z" fill="#1E1A1D"/><path d="M10.7861 30.0655H10.4747C10.2333 30.0655 9.99428 30.0176 9.77129 29.9249C9.54828 29.832 9.34565 29.6959 9.17499 29.5242C9.00431 29.3526 8.86894 29.149 8.7766 28.9248C8.68426 28.7006 8.63675 28.4602 8.63681 28.2175V14.3635C7.50226 14.3634 6.3788 14.5879 5.33061 15.0244C4.28241 15.4609 3.33002 16.1007 2.52777 16.9073C1.72553 17.7139 1.08916 18.6715 0.655038 19.7254C0.220913 20.7793 -0.00246979 21.9089 -0.00237216 23.0495V26.567C-0.0167648 27.9802 0.247636 29.3821 0.775536 30.6919C1.30343 32.0017 2.08435 33.1932 3.07315 34.1976C4.06193 35.2019 5.23896 35.9993 6.53615 36.5435C7.83335 37.0876 9.22499 37.3678 10.6306 37.3678C12.0361 37.3678 13.4277 37.0876 14.725 36.5435C16.0221 35.9993 17.1992 35.2019 18.188 34.1976C19.1768 33.1932 19.9577 32.0017 20.4856 30.6919C21.0135 29.3821 21.2779 27.9802 21.2634 26.567V23.0495H12.6244V28.2175C12.6244 28.4603 12.5767 28.7006 12.4844 28.9248C12.392 29.149 12.2565 29.3527 12.0859 29.5243C11.9152 29.696 11.7126 29.832 11.4895 29.9249C11.2665 30.0176 11.0275 30.0655 10.7861 30.0655Z" fill="#1E1A1D"/><path d="M36.0305 10.9669H33.0026V26.411H41.8896V23.4993H36.0308L36.0305 10.9669Z" fill="#1E1A1D"/><path d="M51.5865 16.687C51.1594 16.1533 50.6125 15.7291 49.9908 15.4492C49.369 15.1692 48.6901 15.0415 48.0097 15.0764C47.2987 15.0708 46.5949 15.2185 45.9457 15.5098C45.2965 15.801 44.717 16.229 44.2463 16.7647C43.2357 17.9031 42.6772 19.3756 42.6772 20.9016C42.6772 22.4276 43.2357 23.9001 44.2463 25.0386C44.7171 25.5741 45.2967 26.0018 45.9459 26.293C46.5952 26.584 47.2988 26.7317 48.0097 26.7262C49.5459 26.7262 50.7382 26.1892 51.5865 25.1156V26.4175H54.4175V15.3861H51.5865V16.687ZM50.7202 23.1407C50.4346 23.4281 50.0935 23.6535 49.7181 23.8034C49.3426 23.9533 48.9405 24.0242 48.5367 24.0121C48.1344 24.025 47.7338 23.9544 47.3599 23.8044C46.986 23.6545 46.647 23.4285 46.3639 23.1407C45.8129 22.5264 45.508 21.7284 45.508 20.9011C45.508 20.0737 45.8129 19.2758 46.3639 18.6614C46.6471 18.3739 46.9862 18.1481 47.3601 17.9982C47.7338 17.8483 48.1345 17.7776 48.5367 17.7903C48.9404 17.7784 49.3424 17.8495 49.7179 17.9992C50.0934 18.149 50.4345 18.3743 50.7202 18.6614C51.2774 19.2728 51.5865 20.0718 51.5865 20.9011C51.5865 21.7303 51.2774 22.5294 50.7202 23.1407Z" fill="#1E1A1D"/><path d="M61.713 22.7909L58.8513 15.3763H55.7572L60.2543 26.0552C60.0661 26.6925 59.696 27.2602 59.1899 27.6879C58.6581 28.0506 58.02 28.2217 57.3791 28.1736V30.8216C58.6286 30.9377 59.8776 30.5966 60.8969 29.8608C61.8384 29.1463 62.5947 28.0016 63.1659 26.4267L67.166 15.3771H64.1378L61.713 22.7909Z" fill="#1E1A1D"/><path d="M73.2941 15.0743C72.5224 15.047 71.7534 15.1809 71.0358 15.4677C70.3183 15.7545 69.6677 16.1879 69.1252 16.7405C68.0777 17.8726 67.4972 19.3627 67.5012 20.9091C67.5052 22.4553 68.0934 23.9423 69.1468 25.069C70.2442 26.1718 71.6998 26.7234 73.5137 26.7236C75.6198 26.7236 77.2144 25.9369 78.2974 24.3635L76.0154 23.0392C75.7252 23.4095 75.3499 23.7033 74.9218 23.8954C74.4937 24.0876 74.0255 24.1724 73.5575 24.1423C71.8749 24.1423 70.8436 23.4511 70.4632 22.0687H78.7363C78.8069 21.6828 78.8437 21.2912 78.8459 20.8988C78.8878 19.3621 78.324 17.8713 77.2772 16.751C76.7701 16.2025 76.1526 15.7692 75.4657 15.4801C74.7788 15.1909 74.0385 15.0526 73.2941 15.0743ZM70.4196 19.8622C70.5449 19.2139 70.8946 18.6314 71.4069 18.218C71.9514 17.8133 72.6169 17.607 73.2938 17.6335C73.9123 17.6254 74.5168 17.8191 75.0168 18.1855C75.5484 18.5971 75.9052 19.1961 76.015 19.8618L70.4196 19.8622Z" fill="#1E1A1D"/><path d="M83.6478 17.276V15.378H80.8169V26.4098H83.6478V21.1368C83.6478 20.0778 83.9879 19.3203 84.668 18.8642C85.3491 18.4081 86.1732 18.2195 86.9835 18.3346V15.1584C86.2719 15.1493 85.5709 15.3322 84.9534 15.6878C84.3436 16.0436 83.8806 16.607 83.6478 17.276Z" fill="#1E1A1D"/><path d="M100.784 13.3554V10.9669H90.7147V13.8794H96.947L90.5526 23.9787V26.4106H100.906V23.4989H94.3886L100.784 13.3554Z" fill="#1E1A1D"/><path d="M107.592 15.0743C106.821 15.047 106.052 15.1809 105.334 15.4677C104.616 15.7545 103.966 16.1879 103.423 16.7405C102.376 17.8726 101.795 19.3628 101.799 20.9092C101.803 22.4554 102.392 23.9425 103.445 25.069C104.542 26.1718 105.998 26.7234 107.812 26.7236C109.918 26.7236 111.512 25.9369 112.596 24.3635L110.313 23.0392C110.023 23.4093 109.648 23.7032 109.22 23.8953C108.792 24.0875 108.324 24.1722 107.856 24.1423C106.173 24.1423 105.142 23.4511 104.762 22.0687H113.035C113.105 21.6827 113.142 21.2912 113.144 20.8988C113.186 19.3621 112.622 17.8713 111.575 16.751C111.069 16.2025 110.451 15.7692 109.764 15.4801C109.077 15.1909 108.337 15.0526 107.592 15.0743ZM104.718 19.8622C104.843 19.2139 105.193 18.6313 105.705 18.218C106.25 17.8131 106.916 17.6069 107.592 17.6336C108.211 17.6252 108.816 17.8189 109.315 18.1855C109.847 18.5971 110.204 19.1961 110.313 19.8618L104.718 19.8622Z" fill="#1E1A1D"/><path d="M117.946 17.276V15.378H115.115V26.4098H117.946V21.1368C117.946 20.0778 118.286 19.3203 118.966 18.8642C119.647 18.4081 120.471 18.2196 121.281 18.3346V15.1584C120.57 15.1493 119.868 15.3322 119.251 15.6878C118.641 16.0436 118.178 16.6069 117.946 17.276Z" fill="#1E1A1D"/><path d="M127.736 15.0723C126.407 15.087 125.125 15.5635 124.107 16.4208C123.089 17.2782 122.396 18.4636 122.149 19.7756C121.901 21.0876 122.112 22.4454 122.747 23.6186C123.382 24.7918 124.401 25.7078 125.631 26.2113C126.861 26.7147 128.227 26.7746 129.497 26.3806C130.765 25.9867 131.859 25.1631 132.594 24.0499C133.328 22.9367 133.655 21.6026 133.522 20.2738C133.388 18.945 132.802 17.7038 131.862 16.7606C131.325 16.21 130.682 15.7762 129.973 15.4857C129.263 15.1953 128.502 15.0546 127.736 15.0723ZM129.864 23.0813C129.587 23.3631 129.255 23.5847 128.889 23.7326C128.523 23.8803 128.131 23.9512 127.736 23.9407C127.343 23.952 126.952 23.8815 126.587 23.7336C126.223 23.5856 125.892 23.3637 125.617 23.0813C125.074 22.4851 124.772 21.7056 124.772 20.8969C124.772 20.0883 125.074 19.3089 125.617 18.7126C125.892 18.4304 126.223 18.2084 126.587 18.0605C126.952 17.9127 127.343 17.8419 127.736 17.8531C128.131 17.8427 128.522 17.9137 128.889 18.0615C129.255 18.2093 129.587 18.4309 129.864 18.7126C130.414 19.3055 130.72 20.0862 130.72 20.8969C130.72 21.7078 130.414 22.4884 129.864 23.0813Z" fill="#1E1A1D"/><path d="M139.49 23.0166H136.045V26.4144H139.49V23.0166Z" fill="#1E1A1D"/></g></g></g><defs><clipPath id="lz-p-clip0"><rect width="139.7" height="38" fill="white"/></clipPath><clipPath id="lz-p-clip1"><rect width="139.706" height="38" fill="white" transform="translate(-0.00292969)"/></clipPath></defs></svg></div>
+        <div class="partner-role">Cross-chain Messaging</div>
+        <div class="partner-desc">Secure message passing across EVM and non-EVM networks. No bridge custody risk.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     FOR PLATFORMS
+════════════════════════════════════ -->
+<section id="platforms" style="border-top: 0.5px solid var(--rule);">
+  <div class="wrap">
+    <div class="section-eyebrow fade-in" style="margin-bottom:20px;">For Platforms</div>
+    <div class="arch-intro fade-in" style="align-items:start;">
+      <div>
+        <h2 class="section-h2">One integration.<br>Every counterparty.</h2>
+        <p class="section-p">Settle with any institution on any platform. Every platform that joins expands your counterparty reach, and theirs.</p>
+        <p class="section-p">Interbank settlement didn't cost banks their customers. It gave them counterparties.</p>
+      </div>
+      <div class="platforms-canvas-wrap">
+        <canvas id="platforms-canvas"></canvas>
+      </div>
+    </div>
+    <div class="arch-stack fade-in">
+      <div class="arch-layer">
+        <span class="arch-layer-num">Network</span>
+        <span class="arch-layer-name">Counterparty reach</span>
+        <span class="arch-layer-desc">Your users settle with theirs. Theirs settle with yours. Every new platform makes yours more valuable. Early integrators shape the network.</span>
+      </div>
+      <div class="arch-layer">
+        <span class="arch-layer-num">Invisible</span>
+        <span class="arch-layer-name">Settlement</span>
+        <span class="arch-layer-desc">Assets stay where they are. Users stay where they are. Settlement happens in the background: atomic, cross-platform, in seconds.</span>
+      </div>
+      <div class="arch-layer">
+        <span class="arch-layer-num">Integration</span>
+        <span class="arch-layer-name">API-native</span>
+        <span class="arch-layer-desc">Days to integrate. No infrastructure changes. No licensing fees.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     COMPLIANCE SPEC
+════════════════════════════════════ -->
+<section id="compliance" style="border-top: 0.5px solid var(--rule); background:#F4F4F1;">
+  <div class="wrap">
+    <div class="section-eyebrow fade-in">Compliance</div>
+    <h2 class="spec-headline fade-in">
+      Nothing commits unless it clears.<br><span class="mute">Each layer covers what the others don't.</span>
+    </h2>
+    <div class="spec-table fade-in">
+      <div class="spec-row">
+        <span class="spec-label">Identity</span>
+        <div>
+          <div class="spec-name"><svg width="88" height="11" viewBox="0 0 221 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="LSEG Risk Intelligence"><g opacity="0.8"><path d="M87.7839 22.7466C87.7839 24.3244 87.911 25.4189 88.0925 26.0938V26.2762C86.0316 26.9511 82.8268 27.4984 80.4753 27.4984C71.5961 27.4984 65.84 22.3088 65.84 14.3558C65.84 6.40273 71.2874 1.07637 79.6764 1.07637C82.2275 1.07637 84.815 1.54152 86.4402 2.29852V7.56103H86.2586C84.6335 6.02879 82.2094 5.12586 79.6037 5.12586C74.3107 5.12586 71.2148 8.39099 71.2148 14.1734C71.2148 19.9557 74.574 23.458 80.4299 23.458C81.2016 23.458 82.0006 23.3759 82.7541 23.2209V16.8913C80.4299 16.8913 79.1407 17.0737 77.9514 17.3017H77.7698V12.4496H77.9514C79.1679 12.6867 80.5298 12.86 83.0083 12.86H88.1743V13.0424C87.9382 13.7447 87.7839 15.1401 87.7839 16.6997V22.7466Z" fill="#1E1A1D"/><path d="M53.2206 23.3393H50.3335V15.9244H53.2206C55.9352 15.9244 57.406 16.1068 58.7678 16.3895H58.9494V11.4098H58.7678C57.3969 11.7199 55.9534 11.8749 53.2206 11.8749H50.3335V5.20786H53.3023C56.4255 5.20786 58.7769 5.54531 60.2477 6.29319H60.3748V1.4411H44.1144V1.62351C44.7318 2.69061 45.1494 4.84304 45.1494 7.04107V21.4605C45.1494 23.6859 44.7409 25.8384 44.1144 26.8781V27.0605H61.2555V21.8709H61.0739C59.1401 22.8833 56.5072 23.3211 53.2297 23.3211L53.2206 23.3393Z" fill="#1E1A1D"/><path d="M31.7487 12.2214C28.444 10.9263 26.61 10.2787 26.61 8.09896C26.61 6.12894 28.0263 5.06184 30.5594 5.06184C32.6748 5.06184 34.4815 5.80972 36.3699 7.39668H36.5515V2.20713C34.8719 1.4775 32.8109 1.1218 30.7409 1.1218C24.9577 1.1218 21.426 4.10419 21.426 8.95628C21.426 13.8084 24.7307 15.0761 28.3169 16.4715C31.6216 17.7666 33.4555 18.4142 33.4555 20.594C33.4555 22.564 31.9848 23.6037 29.3519 23.6037C26.719 23.6037 24.5491 22.6735 22.0978 20.4663H21.9162V26.0663C23.959 27.0239 26.61 27.5711 29.1158 27.5711C34.999 27.5711 38.6396 24.5888 38.6396 19.7914C38.6396 14.994 35.3621 13.6168 31.7487 12.2214Z" fill="#1E1A1D"/><path d="M8.54328 23.3394H6.21907V7.07756C6.21907 4.85217 6.62763 2.69974 7.25407 1.63264V1.45023H0V1.63264C0.617368 2.69974 1.035 4.85217 1.035 7.07756V21.497C1.035 23.7224 0.626447 25.8748 0 26.9146V27.097H16.5691V21.8618H16.3875C14.4264 22.8742 11.8208 23.3394 8.54328 23.3394Z" fill="#1E1A1D"/><path d="M105.288 9.67679C105.288 10.7256 105.479 11.7471 105.769 12.2488V12.34H102.338V12.2488C102.619 11.7471 102.819 10.7348 102.819 9.67679V2.8638C102.819 1.81495 102.619 0.793453 102.338 0.291827V0.200623H106.977C110 0.200623 111.58 1.43189 111.58 3.74848C111.58 5.37193 110.708 6.45726 109.056 6.92241C109.537 7.27811 109.837 7.72501 110.1 8.20839L111.326 10.297C111.934 11.3185 112.343 11.8657 112.797 12.2396V12.3308H110.009C109.583 12.1667 109.138 11.6924 108.675 10.7256L107.912 9.12044C107.34 7.9439 106.968 7.56996 106.26 7.56996H105.279V9.67679H105.288ZM106.977 5.76411C108.402 5.76411 109.02 5.17128 109.02 3.91265C109.02 2.65403 108.366 2.02472 106.977 2.02472H105.288V5.77323H106.977V5.76411Z" fill="#1E1A1D"/><path d="M114.259 2.85489C114.259 1.80604 114.068 0.784547 113.741 0.282921V0.191716H117.237V0.282921C116.919 0.784547 116.719 1.79692 116.719 2.85489V9.66788C116.719 10.7167 116.91 11.7382 117.237 12.2399V12.3311H113.741V12.2399C114.059 11.7382 114.259 10.7259 114.259 9.66788V2.85489Z" fill="#1E1A1D"/><path d="M119.279 11.811V9.15695H119.352C120.505 10.2058 121.504 10.6527 122.784 10.6527C124.064 10.6527 124.736 10.1693 124.736 9.22079C124.736 8.19018 123.864 7.88008 122.303 7.25989C120.596 6.60322 119.034 5.90094 119.034 3.71203C119.034 1.41367 120.705 0 123.438 0C124.436 0 125.408 0.182409 126.189 0.519866V2.98239H126.116C125.208 2.23451 124.355 1.87882 123.365 1.87882C122.176 1.87882 121.504 2.38044 121.504 3.31985C121.504 4.35046 122.375 4.66056 123.937 5.28075C125.644 5.93742 127.205 6.6397 127.205 8.82861C127.205 11.0175 125.48 12.5224 122.693 12.5224C121.504 12.5224 120.242 12.2579 119.279 11.811Z" fill="#1E1A1D"/><path d="M129.266 2.8638C129.266 1.81495 129.075 0.793453 128.784 0.291827V0.200623H132.216V0.291827C131.935 0.793453 131.735 1.80583 131.735 2.8638V5.43577L134.895 1.86967C135.376 1.31332 135.693 0.766092 135.621 0.300948V0.209744H139.407V0.300948C138.753 0.674887 138.163 1.24948 137.627 1.79671L134.023 5.56346L137.791 10.4703C138.308 11.1269 138.871 11.811 139.498 12.2579V12.3491H136.456C135.993 12.1849 135.494 11.6742 134.804 10.6892L131.735 6.35694V9.69503C131.735 10.7439 131.926 11.7654 132.216 12.267V12.3582H128.784V12.267C129.066 11.7654 129.266 10.753 129.266 9.69503V2.8638Z" fill="#1E1A1D"/><path d="M102.819 18.3049C102.819 17.2561 102.619 16.2346 102.301 15.7329V15.6417H105.797V15.7329C105.479 16.2346 105.279 17.2469 105.279 18.3049V25.1179C105.279 26.1668 105.47 27.1882 105.797 27.6899V27.7811H102.301V27.6899C102.619 27.1882 102.819 26.1759 102.819 25.1179V18.3049Z" fill="#1E1A1D"/><path d="M110.49 19.144V25.1179C110.49 26.1668 110.69 27.1882 110.972 27.6899V27.7811H107.903V27.6899C108.184 27.1882 108.384 26.1759 108.384 25.1179V18.3049C108.384 17.2561 108.193 16.2346 107.903 15.7329V15.6417H111.189L116.11 23.458V18.3049C116.11 17.2561 115.929 16.2346 115.629 15.7329V15.6417H118.698V15.7329C118.416 16.2346 118.217 17.2469 118.217 18.3049V27.7811H116.01L110.49 19.144Z" fill="#1E1A1D"/><path d="M123.438 27.6899C123.737 27.1882 123.919 26.1759 123.919 25.1179V17.4293H123.438C122.139 17.4293 121.059 17.63 120.296 18.1043H120.206V15.6417H130.12V18.1043H130.029C129.266 17.6209 128.186 17.4293 126.869 17.4293H126.388V25.1179C126.388 26.1668 126.588 27.1882 126.869 27.6899V27.7811H123.438V27.6899Z" fill="#1E1A1D"/><path d="M131.681 27.6899C131.962 27.1882 132.162 26.1759 132.162 25.1179V18.3049C132.162 17.2561 131.971 16.2346 131.681 15.7329V15.6417H139.371V17.9401H139.316C138.626 17.5844 137.501 17.4202 136.03 17.4202H134.623V20.5759H135.993C137.292 20.5759 137.982 20.4847 138.626 20.3479H138.699V22.701H138.626C137.991 22.555 137.292 22.4821 135.993 22.4821H134.623V25.9752H135.993C137.537 25.9752 138.799 25.7655 139.707 25.3003H139.798V27.7628H131.681V27.6716V27.6899Z" fill="#1E1A1D"/><path d="M141.64 27.6899C141.922 27.1882 142.122 26.1759 142.122 25.1179V18.3049C142.122 17.2561 141.931 16.2346 141.64 15.7329V15.6417H145.072V15.7329C144.791 16.2346 144.591 17.2469 144.591 18.3049V25.9935H145.69C147.233 25.9935 148.459 25.7837 149.403 25.3003H149.494V27.7811H141.64V27.6899Z" fill="#1E1A1D"/><path d="M151.038 27.6899C151.319 27.1882 151.519 26.1759 151.519 25.1179V18.3049C151.519 17.2561 151.328 16.2346 151.038 15.7329V15.6417H154.469V15.7329C154.188 16.2346 153.988 17.2469 153.988 18.3049V25.9935H155.087C156.63 25.9935 157.856 25.7837 158.8 25.3003H158.891V27.7811H151.038V27.6899Z" fill="#1E1A1D"/><path d="M160.915 18.3049C160.915 17.2561 160.724 16.2346 160.398 15.7329V15.6417H163.893V15.7329C163.575 16.2346 163.375 17.2469 163.375 18.3049V25.1179C163.375 26.1668 163.566 27.1882 163.893 27.6899V27.7811H160.398V27.6899C160.715 27.1882 160.915 26.1759 160.915 25.1179V18.3049Z" fill="#1E1A1D"/><path d="M165.8 21.7525C165.8 17.8945 168.378 15.4502 172.355 15.4502C173.562 15.4502 174.788 15.6782 175.551 16.0431V18.5238H175.478C174.697 17.8124 173.562 17.3838 172.318 17.3838C169.813 17.3838 168.342 18.9343 168.342 21.6704C168.342 24.4065 169.94 26.0756 172.709 26.0756C173.081 26.0756 173.453 26.0391 173.807 25.9661V22.9655C172.709 22.9655 172.082 23.0385 171.538 23.1662H171.447V20.8678H171.538C172.11 20.9772 172.763 21.0684 173.934 21.0684H176.386V21.1414C176.241 21.4606 176.195 22.1447 176.195 22.8743V25.7472C176.195 26.4951 176.25 27.015 176.34 27.3342V27.4072C175.36 27.7264 173.835 28 172.736 28C168.523 28 165.809 25.5375 165.809 21.7707L165.8 21.7525Z" fill="#1E1A1D"/><path d="M178.446 27.6899C178.728 27.1882 178.928 26.1759 178.928 25.1179V18.3049C178.928 17.2561 178.728 16.2346 178.446 15.7329V15.6417H186.136V17.9401H186.082C185.392 17.5844 184.266 17.4202 182.795 17.4202H181.388V20.5759H182.759C184.057 20.5759 184.747 20.4847 185.392 20.3479H185.464V22.701H185.392C184.756 22.555 184.057 22.4821 182.759 22.4821H181.388V25.9752H182.759C184.302 25.9752 185.564 25.7655 186.472 25.3003H186.563V27.7628H178.446V27.6716V27.6899Z" fill="#1E1A1D"/><path d="M191.003 19.144V25.1179C191.003 26.1668 191.203 27.1882 191.484 27.6899V27.7811H188.415V27.6899C188.697 27.1882 188.897 26.1759 188.897 25.1179V18.3049C188.897 17.2561 188.697 16.2346 188.415 15.7329V15.6417H191.702L196.623 23.458V18.3049C196.623 17.2561 196.441 16.2346 196.142 15.7329V15.6417H199.21V15.7329C198.929 16.2346 198.729 17.2469 198.729 18.3049V27.7811H196.523L191.003 19.144Z" fill="#1E1A1D"/><path d="M201.107 21.7525C201.107 17.9675 203.613 15.4502 207.381 15.4502C208.643 15.4502 209.887 15.6965 210.858 16.2164V18.7336H210.767C209.859 17.8033 208.616 17.3747 207.372 17.3747C205.048 17.3747 203.622 19.0163 203.622 21.6613C203.622 24.3062 205.057 26.0482 207.408 26.0482C208.652 26.0482 209.859 25.5284 210.767 24.6072H210.858V27.2156C209.878 27.699 208.625 27.9818 207.363 27.9818C203.613 27.9818 201.107 25.4827 201.107 21.7525Z" fill="#1E1A1D"/><path d="M212.883 27.6899C213.165 27.1882 213.365 26.1759 213.365 25.1179V18.3049C213.365 17.2561 213.165 16.2346 212.883 15.7329V15.6417H220.573V17.9401H220.519C219.829 17.5844 218.703 17.4202 217.232 17.4202H215.825V20.5759H217.196C218.494 20.5759 219.184 20.4847 219.829 20.3479H219.901V22.701H219.829C219.193 22.555 218.494 22.4821 217.196 22.4821H215.825V25.9752H217.196C218.739 25.9752 220.001 25.7655 220.909 25.3003H221V27.7628H212.883V27.6716V27.6899Z" fill="#1E1A1D"/></g></svg></div>
+          <div class="spec-chips">
+            <span class="chip">Available</span>
+          </div>
+        </div>
+        <span class="spec-desc">Entity-level KYC and sanctions screening wired directly into the settlement gate. Counterparties are validated before commit.</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-label">Address Risk</span>
+        <div>
+          <div class="spec-name"><svg width="62" height="16" viewBox="0 0 195 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="CipherOwl"><g opacity="0.8"><path d="M75.7003 34.2713C73.929 34.2713 72.3486 33.8538 70.9593 33.0187C69.5873 32.166 68.5193 30.9934 67.7552 29.501C66.9911 28.0087 66.609 26.3032 66.609 24.3845C66.609 22.4657 66.9998 20.769 67.7812 19.2945C68.5801 17.8021 69.6742 16.6473 71.0635 15.8301C72.4528 14.9951 74.0244 14.5775 75.7785 14.5775C77.0983 14.5775 78.3226 14.8263 79.4514 15.3238C80.5803 15.8034 81.5441 16.4874 82.3429 17.3757C83.1592 18.2641 83.7583 19.3122 84.1404 20.5203L82.4472 21.2665C81.9782 19.7208 81.1533 18.5128 79.9724 17.6422C78.7915 16.7539 77.3849 16.3098 75.7524 16.3098C74.3284 16.3098 73.0693 16.6384 71.9752 17.2957C70.8812 17.9532 70.0215 18.8947 69.3964 20.1206C68.7885 21.3465 68.4846 22.7588 68.4846 24.3578C68.4846 25.9923 68.7798 27.4314 69.3703 28.6749C69.9781 29.9008 70.829 30.8513 71.9232 31.5264C73.0172 32.2015 74.285 32.539 75.7263 32.539C77.2026 32.539 78.4702 32.1749 79.5296 31.4465C80.6064 30.7181 81.4399 29.6521 82.0303 28.2486L83.6455 29.1013C82.9508 30.7536 81.9175 32.0327 80.5455 32.9388C79.1736 33.8271 77.5586 34.2713 75.7003 34.2713Z" fill="#1E1A1D"/><path d="M87.4256 20.4137H89.2229V33.8715H87.4256V20.4137ZM88.3373 17.5622C87.9379 17.5622 87.5905 17.4201 87.2953 17.1358C87.0174 16.8516 86.8785 16.4963 86.8785 16.0699C86.8785 15.6613 87.0174 15.3149 87.2953 15.0306C87.5905 14.7463 87.9379 14.6042 88.3373 14.6042C88.7193 14.6042 89.058 14.7463 89.3533 15.0306C89.6485 15.3149 89.7961 15.6613 89.7961 16.0699C89.7961 16.4963 89.6485 16.8516 89.3533 17.1358C89.0753 17.4201 88.7367 17.5622 88.3373 17.5622Z" fill="#1E1A1D"/><path d="M93.4804 20.4137H95.2257V22.7056H95.2779C95.7989 21.8706 96.4761 21.2132 97.3094 20.7335C98.1609 20.2538 99.1156 20.014 100.176 20.014C101.374 20.014 102.424 20.316 103.327 20.92C104.247 21.5241 104.96 22.368 105.463 23.4517C105.984 24.5355 106.245 25.7968 106.245 27.2359C106.245 28.6394 105.993 29.8741 105.489 30.9402C104.986 32.0061 104.265 32.8322 103.327 33.4185C102.406 33.987 101.339 34.2713 100.123 34.2713C99.411 34.2713 98.742 34.1558 98.1174 33.9249C97.4919 33.7117 96.9358 33.4096 96.4501 33.0187C95.9638 32.6101 95.5904 32.1482 95.3299 31.633H95.2779V39.681H93.4804V20.4137ZM99.941 32.619C100.844 32.619 101.634 32.4058 102.311 31.9794C102.989 31.5353 103.51 30.9046 103.874 30.0873C104.256 29.2701 104.447 28.3196 104.447 27.2359C104.447 26.0989 104.256 25.1129 103.874 24.2779C103.51 23.4428 102.98 22.8033 102.285 22.3591C101.591 21.8972 100.791 21.6663 99.8888 21.6663C98.9679 21.6663 98.1609 21.8883 97.4658 22.3325C96.7717 22.7588 96.233 23.3895 95.8509 24.2246C95.4688 25.0418 95.2779 26.0189 95.2779 27.1559C95.2779 28.293 95.4775 29.279 95.877 30.114C96.2764 30.9313 96.8239 31.5531 97.5179 31.9794C98.2304 32.4058 99.0374 32.619 99.941 32.619Z" fill="#1E1A1D"/><path d="M109.608 14.7107H111.38V22.892H111.432C111.918 21.9504 112.587 21.2398 113.438 20.7601C114.288 20.2626 115.227 20.0139 116.251 20.0139C117.171 20.0139 117.996 20.2271 118.725 20.6535C119.455 21.0622 120.028 21.6573 120.445 22.439C120.862 23.2207 121.07 24.1535 121.07 25.2372V33.8715H119.299V25.6102C119.299 24.7397 119.142 24.0112 118.829 23.425C118.535 22.8387 118.127 22.4035 117.605 22.1192C117.084 21.835 116.477 21.6928 115.782 21.6928C114.949 21.6928 114.193 21.906 113.516 22.3324C112.856 22.741 112.335 23.3362 111.952 24.1178C111.571 24.8819 111.38 25.779 111.38 26.8094V33.8715H109.608V14.7107Z" fill="#1E1A1D"/><path d="M130.727 34.2713C129.407 34.2713 128.251 33.987 127.262 33.4185C126.289 32.8322 125.543 32.015 125.021 30.9668C124.5 29.9008 124.24 28.6572 124.24 27.2359C124.24 25.7791 124.509 24.5089 125.048 23.4251C125.586 22.3236 126.341 21.4797 127.314 20.8934C128.286 20.3071 129.423 20.014 130.727 20.014C132.064 20.014 133.201 20.316 134.139 20.92C135.094 21.5064 135.815 22.3147 136.301 23.3451C136.804 24.3756 137.056 25.5392 137.056 26.8361C137.056 26.925 137.056 27.0227 137.056 27.1293C137.056 27.2181 137.048 27.3159 137.03 27.4225H125.621V25.9567H135.077C135.059 25.1573 134.877 24.4378 134.529 23.7981C134.2 23.1408 133.713 22.6256 133.071 22.2525C132.429 21.8617 131.655 21.6663 130.753 21.6663C129.78 21.6663 128.938 21.8795 128.225 22.3058C127.531 22.7144 126.993 23.3273 126.61 24.1446C126.228 24.9619 126.037 25.9479 126.037 27.1026C126.037 28.2397 126.228 29.2257 126.61 30.0607C127.01 30.878 127.557 31.5087 128.251 31.9528C128.964 32.3969 129.788 32.619 130.727 32.619C131.664 32.619 132.498 32.3881 133.227 31.9261C133.957 31.4465 134.521 30.7447 134.92 29.8208L136.483 30.7003C135.893 31.9084 135.103 32.8055 134.113 33.3918C133.14 33.9782 132.012 34.2713 130.727 34.2713Z" fill="#1E1A1D"/><path d="M140.238 20.4137H141.983V22.4924H142.061C142.426 21.6929 142.912 21.08 143.52 20.6535C144.128 20.2272 144.839 20.014 145.656 20.014C146.142 20.014 146.585 20.1028 146.984 20.2805C147.384 20.4404 147.713 20.698 147.974 21.0534C148.252 21.4087 148.426 21.8706 148.495 22.4391L146.932 23.3984C146.845 22.7944 146.628 22.3591 146.281 22.0926C145.951 21.8262 145.543 21.6929 145.057 21.6929C144.448 21.6929 143.911 21.8883 143.442 22.2792C142.99 22.67 142.642 23.2119 142.4 23.9047C142.157 24.5977 142.035 25.3794 142.035 26.2499V33.8716H140.238V20.4137Z" fill="#1E1A1D"/><path d="M159.673 34.2713C157.885 34.2713 156.304 33.8627 154.933 33.0454C153.578 32.2104 152.518 31.0556 151.755 29.581C151.007 28.0887 150.634 26.3831 150.634 24.4644C150.634 22.5457 151.016 20.8401 151.781 19.3478C152.544 17.8376 153.613 16.6651 154.985 15.8301C156.356 14.9951 157.919 14.5775 159.673 14.5775C161.41 14.5775 162.956 14.9951 164.31 15.8301C165.682 16.6651 166.75 17.8287 167.514 19.3211C168.296 20.8134 168.687 22.5012 168.687 24.3845C168.687 26.2854 168.305 27.9821 167.54 29.4744C166.776 30.9668 165.708 32.1393 164.336 32.9921C162.982 33.8449 161.427 34.2713 159.673 34.2713ZM159.673 32.539C161.097 32.539 162.347 32.2015 163.425 31.5264C164.518 30.8513 165.361 29.9008 165.951 28.6749C166.542 27.4314 166.837 26.01 166.837 24.4111C166.837 22.8121 166.542 21.3998 165.951 20.1739C165.361 18.948 164.527 17.9976 163.451 17.3224C162.373 16.6473 161.115 16.3098 159.673 16.3098C158.215 16.3098 156.947 16.6473 155.87 17.3224C154.794 17.9976 153.96 18.948 153.37 20.1739C152.796 21.3998 152.51 22.8121 152.51 24.4111C152.51 26.01 152.796 27.4314 153.37 28.6749C153.96 29.9008 154.794 30.8513 155.87 31.5264C156.965 32.2015 158.232 32.539 159.673 32.539Z" fill="#1E1A1D"/><path d="M170.928 20.4136H172.699L176.215 31.5263H176.293L179.862 20.3336H181.555L185.255 31.5263H185.359L188.876 20.4136H190.569L186.297 33.8714H184.265L180.748 23.2917H180.618L177.232 33.8714H175.173L170.928 20.4136Z" fill="#1E1A1D"/><path d="M193.203 14.7107H195V33.8715H193.203V14.7107Z" fill="#1E1A1D"/><path d="M35.3445 25.0194H53.5888C53.5888 24.0234 53.5376 23.0447 53.448 22.0744L35.2805 23.7788C35.3188 24.1866 35.3445 24.6029 35.3445 25.0194Z" fill="#1E1A1D"/><path d="M34.7443 21.559L48.3252 16.8067C47.6554 14.8749 46.7593 13.0504 45.667 11.3675L33.6307 19.2623C34.0872 19.9706 34.4627 20.7433 34.7443 21.559Z" fill="#1E1A1D"/><path d="M35.2861 26.2644L53.4537 27.9687C53.5433 26.9986 53.5944 26.0154 53.5944 25.0238H35.3501C35.3501 25.4402 35.3202 25.8566 35.2861 26.2644Z" fill="#1E1A1D"/><path d="M33.625 30.7803L45.6613 38.6751C46.7536 36.9922 47.6496 35.1677 48.3195 33.2359L34.7429 28.488C34.4612 29.2993 34.0858 30.0721 33.625 30.7803Z" fill="#1E1A1D"/><path d="M27.6908 35.1722C26.8204 35.4168 25.9073 35.5586 24.9644 35.5714L31.5949 0.940157C29.4828 0.343436 27.2599 0.0128786 24.9644 0C24.926 0 24.8833 0 24.8449 0C23.855 0 22.8822 0.0643937 21.9222 0.176011L27.6908 35.1722Z" fill="#1E1A1D"/><path d="M29.9861 34.2151L37.0347 46.8148C38.7712 45.8275 40.3797 44.6383 41.8262 43.2731L32.0043 32.721C31.3942 33.2921 30.72 33.7987 29.9861 34.2151Z" fill="#1E1A1D"/><path d="M32.0124 17.3265L41.8172 6.75727C40.358 5.3878 38.7453 4.20724 37.013 3.22845L29.9814 15.8411C30.7154 16.2532 31.3981 16.747 32.0124 17.3265Z" fill="#1E1A1D"/></g></svg></div>
+          <div class="spec-chips">
+            <span class="chip">Available</span>
+          </div>
+        </div>
+        <span class="spec-desc">Real-time on-chain address classification. High-risk wallets are blocked at protocol level before any transfer is signed.</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-label">Pricing</span>
+        <div>
+          <div class="spec-name"><svg width="63" height="16" viewBox="0 0 197 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Chainlink"><g opacity="0.8"><path d="M21.6113 0L0 12.5V37.5L21.6113 50L43.2226 37.5V12.5L21.6113 0ZM34.067 32.202L21.6154 39.404L9.16358 32.202V17.798L21.6154 10.596L34.067 17.798V32.202Z" fill="#1E1A1D"/><path d="M66.9343 37.5261C64.7882 37.5261 62.8657 37.0341 61.1725 36.0441C59.4777 35.0561 58.14 33.63 57.1599 31.7621C56.1796 29.894 55.6904 27.6461 55.6904 25.0161C55.6904 22.3861 56.1856 20.102 57.1697 18.228C58.156 16.356 59.4977 14.928 61.1985 13.946C62.8976 12.964 64.8101 12.474 66.9364 12.474C68.3177 12.474 69.6075 12.672 70.7933 13.064C71.9813 13.456 73.0374 14.026 73.9636 14.774C74.8901 15.522 75.6427 16.436 76.2277 17.516C76.8106 18.596 77.188 19.824 77.3637 21.2019H72.5423C72.4324 20.504 72.2209 19.88 71.9055 19.326C71.5879 18.776 71.1886 18.306 70.7056 17.918C70.2204 17.53 69.6695 17.236 69.0565 17.034C68.4396 16.832 67.7689 16.732 67.0382 16.732C65.7525 16.732 64.6206 17.054 63.6383 17.698C62.658 18.342 61.8913 19.28 61.3423 20.514C60.7913 21.746 60.5157 23.2499 60.5157 25.0161C60.5157 26.782 60.7932 28.316 61.3482 29.5441C61.9054 30.7719 62.668 31.6981 63.6443 32.326C64.6206 32.9541 65.7465 33.2679 67.0182 33.2679C67.727 33.2679 68.3857 33.1719 68.9946 32.9799C69.6035 32.79 70.1525 32.5101 70.6376 32.144C71.1209 31.78 71.5281 31.332 71.8554 30.802C72.183 30.272 72.4126 29.664 72.5423 28.978H77.3637C77.2219 30.122 76.8824 31.2099 76.3434 32.236C75.8043 33.2601 75.0858 34.17 74.1853 34.9601C73.287 35.752 72.2288 36.3739 71.015 36.8361C69.7992 37.2939 68.4396 37.5239 66.9383 37.5239V37.5301L66.9343 37.5261Z" fill="#1E1A1D"/><path d="M84.6188 26.546V37.1881H79.9452V12.7921H84.4889V22.0741H84.7185C85.1419 21.0161 85.8087 20.1801 86.713 19.5681C87.6153 18.9581 88.7673 18.6501 90.1608 18.6501C91.4245 18.6501 92.5326 18.9221 93.477 19.4681C94.4251 20.0141 95.1618 20.8001 95.6829 21.826C96.206 22.8501 96.4656 24.092 96.4656 25.5441V37.1841H91.774V26.3301C91.774 25.1501 91.4744 24.232 90.8755 23.57C90.2766 22.9101 89.4301 22.58 88.342 22.58C87.6113 22.58 86.9685 22.7381 86.4135 23.056C85.8566 23.3741 85.4194 23.8241 85.0978 24.4061C84.7764 24.992 84.6167 25.7001 84.6167 26.5441V26.5482L84.6188 26.546Z" fill="#1E1A1D"/><path d="M104.774 37.5502C103.608 37.5502 102.566 37.3421 101.646 36.928C100.725 36.5122 100.001 35.8982 99.4717 35.0861C98.9427 34.2741 98.6792 33.266 98.6792 32.0661C98.6792 31.042 98.8669 30.1882 99.2442 29.5102C99.6214 28.8321 100.133 28.2861 100.781 27.866C101.43 27.4462 102.163 27.1281 102.987 26.9162C103.81 26.7041 104.674 26.5541 105.577 26.466C106.645 26.3561 107.505 26.2561 108.16 26.1641C108.815 26.0722 109.29 25.9241 109.59 25.7221C109.889 25.52 110.039 25.2222 110.039 24.83V24.7481C110.039 23.9282 109.787 23.2922 109.288 22.8401C108.787 22.3882 108.072 22.1601 107.146 22.1601C106.166 22.1601 105.387 22.3741 104.808 22.8081C104.231 23.2382 103.846 23.7601 103.648 24.37L99.3 23.894C99.5716 22.782 100.067 21.8341 100.779 21.0541C101.492 20.2741 102.389 19.6781 103.467 19.2681C104.545 18.8581 105.771 18.6521 107.144 18.6521C108.092 18.6521 109.017 18.7641 109.915 18.9881C110.814 19.2101 111.624 19.5661 112.351 20.0541C113.073 20.5401 113.654 21.1821 114.082 21.9781C114.511 22.7761 114.728 23.7462 114.728 24.894V37.1881H110.252V34.65H110.123C109.837 35.1941 109.46 35.688 108.979 36.126C108.5 36.564 107.911 36.9082 107.214 37.1661C106.517 37.4241 105.705 37.5521 104.778 37.5521H104.772L104.774 37.5502Z" fill="#1E1A1D"/><path d="M130.221 26.546V37.1881H125.547V18.8821H130.139V22.0741H130.336C130.75 21.0261 131.406 20.1941 132.305 19.5761C133.203 18.9581 134.333 18.6521 135.697 18.6521C136.96 18.6521 138.065 18.9241 139.005 19.4701C139.947 20.0141 140.678 20.8041 141.197 21.8341C141.714 22.8661 141.973 24.1021 141.973 25.5422V37.1821H137.3V26.3282C137.3 25.1601 136.998 24.242 136.394 23.5781C135.791 22.9141 134.958 22.5781 133.9 22.5781C133.181 22.5781 132.544 22.7362 131.995 23.0541C131.444 23.3722 131.013 23.8221 130.696 24.4042C130.378 24.99 130.222 25.6982 130.222 26.5422V26.546H130.221Z" fill="#1E1A1D"/><path d="M149.717 11.592V37.19H145.043V11.592H149.717Z" fill="#1E1A1D"/><path d="M165.207 37.1881H160.533V18.8821H165.125V22.0741H165.323C165.736 21.0261 166.393 20.1941 167.291 19.5761C168.19 18.9581 169.32 18.6521 170.683 18.6521C171.947 18.6521 173.051 18.9241 173.993 19.4701C174.935 20.0141 175.666 20.8041 176.183 21.8341C176.7 22.8661 176.96 24.1021 176.96 25.5422V37.1821H172.286V26.3282C172.286 25.1601 171.985 24.242 171.38 23.5781C170.777 22.9141 169.944 22.5781 168.886 22.5781C168.168 22.5781 167.531 22.7362 166.982 23.0541C166.431 23.3722 166 23.8221 165.682 24.4042C165.365 24.99 165.207 25.6982 165.207 26.5422V37.1881Z" fill="#1E1A1D"/><path d="M191.458 37.19H197L189.703 26.8121L196.623 18.884H191.198L185.001 26.0402H184.71V12.7921H180.034V37.19H184.71V31.214L186.175 29.5861L191.458 37.1881V37.19Z" fill="#1E1A1D"/><path d="M122.509 11.592H117.836V16.274H122.509V11.592Z" fill="#1E1A1D"/><path d="M157.502 11.592H152.828V16.274H157.502V11.592Z" fill="#1E1A1D"/><path d="M117.799 37.19V18.8859H122.473V37.19H117.799Z" fill="#1E1A1D"/><path d="M152.787 37.1901V18.886H157.461V37.1901H152.787Z" fill="#1E1A1D"/></g></svg></div>
+          <div class="spec-chips">
+            <span class="chip">Available</span>
+          </div>
+        </div>
+        <span class="spec-desc">Tamper-resistant price feeds for collateral valuation. DvP ratios are oracle-verified at settlement time, not derived from off-chain inputs.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     FOOTER SLAB
+════════════════════════════════════ -->
+<div class="fslab">
+  <div class="fslab-inner">
+    <div class="fslab-top">
+      <div>
+        <h2 class="fslab-h2">Neutral settlement infrastructure.</h2>
+      </div>
+      <div class="fslab-actions">
+        <a href="mailto:briefings@keystoneos.xyz" class="btn-outline">Request technical documentation</a>
+        <a href="mailto:briefings@keystoneos.xyz" class="btn-primary" style="padding:15px 26px; font-size:13px;">Request a briefing →</a>
+      </div>
+    </div>
+    <div class="fslab-foot">
+      <div class="fslab-brand">
+        <svg width="19" height="26" viewBox="0 0 1935 2658" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M1691.44 1455.72C1698.53 1467.86 1705.66 1480.58 1712.83 1493.87L1795.1 1644.64C1431.34 2310.84 483.761 2658 483.761 2658V2126.37C867.062 2080.88 1617.58 1801.8 1691.44 1455.72Z" fill="#1A2E25"/>
+          <path d="M1916.17 925.456C1928.45 985.201 1935 1048.75 1935 1116.35C1935 1203.02 1924.26 1286.15 1904.72 1365.75C1875.05 1312.96 1844.98 1268.03 1814.37 1231.07C1779.91 1187.92 1742.23 1153.03 1701.39 1126.37C1788.47 1075.68 1860 1008.65 1916.17 925.456Z" fill="#1A2E25"/>
+          <path d="M0 0C397.366 0 1447.52 71.7498 1809.9 657.204C1805.19 674.195 1799.7 690.941 1793.28 707.399C1769.03 768.335 1735.83 821.691 1693.69 867.393C1651.57 913.087 1601.78 949.259 1544.33 975.916C1515.41 988.698 1485.51 998.227 1454.64 1004.57C1127.23 724.62 597.516 691.048 0 691.048V0Z" fill="#1A2E25"/>
+        </svg>
+        <span class="fslab-wordmark">KEYSTONE · OS</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     FOOTNOTE
+════════════════════════════════════ -->
+<div class="footnote">
+  <p class="footnote-inner">
+    References to third-party names and trademarks reflect active commercial
+    relationships with integration partners and service providers.
+    KeyStone OS operates as independent, neutral infrastructure.
+    © 2026 KeyStone OS.
+  </p>
+</div>
+
+<!-- ═══════════════════════════════════
+     ARCHITECTURE CANVAS
+     Layered horizontal stack diagram —
+     four bands converging to a single
+     settlement commit square
+════════════════════════════════════ -->
+<script>
+(function () {
+  const canvas = document.getElementById('arch-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  const CW = 1120, CH = 280;
+  canvas.width  = CW;
+  canvas.height = CH;
+
+  const INK  = [26, 46, 37];
+  const MINT = '#6EECC1';
+  const BG   = '#FAFAF8';
+  const FPS  = 30;
+
+  // Four lanes → one commit point
+  const CMTX  = CW * 0.78;
+  const CMTY  = CH * 0.50;
+  const CMTSZ = 14;
+  const CDIST = 60;
+
+  const LANES = [
+    { y: CH * 0.14, label: 'SETTLEMENT ENGINE', startX: 0    },
+    { y: CH * 0.38, label: 'COMPLIANCE RAIL',   startX: CW * 0.08 },
+    { y: CH * 0.62, label: 'CROSS-CHAIN MSG',   startX: CW * 0.08 },
+    { y: CH * 0.86, label: 'API + SDK',          startX: 0    },
+  ];
+
+  function laneCenter(lane, x) {
+    if (x < lane.startX) return lane.y;
+    const t = Math.min((x - lane.startX) / (CMTX - lane.startX), 1);
+    return lane.y + Math.pow(t, 2.6) * (CMTY - lane.y);
+  }
+
+  const ST    = { PRE: 0, COMMIT: 1, POST: 2 };
+  const lerp  = (a, b, t) => a + (b - a) * t;
+  const d2    = (x1, y1, x2, y2) => Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+
+  class Particle {
+    constructor(idx, total) {
+      this.lane = LANES[idx % LANES.length];
+      this.x    = this.lane.startX - Math.random() * CW * 0.18;
+      this.yv   = (Math.random() - 0.5) * 20;
+      this.z    = (Math.random() - 0.5) * 2;
+      this.spd  = (0.42 + Math.random() * 0.56) * 1.1;
+      this.sz   = 1.8 + Math.random() * 2.4;
+      this.op   = 0.28 + Math.random() * 0.38;
+      this.st   = ST.PRE;
+      this.dwell = 0;
+      this.ph   = Math.random() * Math.PI * 2;
+      this.pspd = 0.44 + Math.random() * 0.16;
+      this.postY = CMTY + (Math.random() - 0.5) * 3;
+      this.y    = laneCenter(this.lane, Math.max(this.x, this.lane.startX)) + this.yv;
+    }
+
+    update(time) {
+      if (this.st === ST.PRE) {
+        this.x += this.spd;
+        const cx  = Math.max(this.x, this.lane.startX);
+        const t   = Math.min((cx - this.lane.startX) / (CMTX - this.lane.startX), 1);
+        const vs  = Math.max(0, 1 - Math.pow(t, 1.6));
+        const osc = Math.sin(time * 0.38 + this.ph) * 5 * vs;
+        this.y = laneCenter(this.lane, cx) + this.yv * vs + osc;
+
+        if (this.x >= CMTX - 4) {
+          this.x    = CMTX - 1 + Math.random() * 3;
+          this.y    = CMTY + (Math.random() - 0.5) * 8;
+          this.st   = ST.COMMIT;
+          this.dwell = 12 + Math.floor(Math.random() * 20);
+        }
+      } else if (this.st === ST.COMMIT) {
+        this.x = CMTX + (Math.random() - 0.5) * 6;
+        this.y = CMTY + (Math.random() - 0.5) * 7;
+        this.dwell--;
+        if (this.dwell <= 0) {
+          this.st    = ST.POST;
+          this.x     = CMTX + 6;
+          this.postY = CMTY + (Math.random() - 0.5) * 3;
+          this.y     = this.postY;
+        }
+      } else {
+        this.x += this.pspd;
+        this.y  = lerp(this.y, this.postY + Math.sin(time * 0.22 + this.ph) * 1, 0.14);
+        if (this.x > CW + 32) {
+          this.x    = this.lane.startX - Math.random() * CW * 0.14;
+          this.y    = laneCenter(this.lane, Math.max(this.x, this.lane.startX)) + this.yv * 0.6;
+          this.st   = ST.PRE;
+          this.dwell = 0;
+          this.postY = CMTY + (Math.random() - 0.5) * 3;
+        }
+      }
+    }
+
+    get size()    { return this.sz * lerp(0.65, 1.2, (this.z + 1) / 2) * (this.st === ST.COMMIT ? 1.2 : 1); }
+    get opacity() { return Math.min(this.op * lerp(0.45, 1.0, (this.z + 1) / 2) * (this.st === ST.COMMIT ? 1.35 : 1), 0.85); }
+  }
+
+  const COUNT = 80;
+  const parts = Array.from({ length: COUNT }, (_, i) => new Particle(i, COUNT));
+  let time = 0, lastTime = 0;
+  const INTERVAL = 1000 / FPS;
+
+  function draw() {
+    ctx.fillStyle = BG;
+    ctx.fillRect(0, 0, CW, CH);
+
+    parts.forEach(p => p.update(time));
+    const sorted = [...parts].sort((a, b) => a.z - b.z);
+
+    // Lane guide lines
+    ctx.strokeStyle = `rgba(${INK[0]},${INK[1]},${INK[2]},0.05)`;
+    ctx.lineWidth   = 0.5;
+    LANES.forEach(lane => {
+      ctx.beginPath();
+      const steps = 80;
+      for (let s = 0; s <= steps; s++) {
+        const x = lane.startX + (s / steps) * (CMTX - lane.startX);
+        const y = laneCenter(lane, x);
+        s === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      // Post-commit thread
+      ctx.beginPath();
+      ctx.moveTo(CMTX, CMTY);
+      ctx.lineTo(CW, CMTY);
+      ctx.stroke();
+    });
+
+    // Lane labels
+    ctx.font = '500 9px "JetBrains Mono", monospace';
+    ctx.letterSpacing = '1.5px';
+    ctx.fillStyle = `rgba(${INK[0]},${INK[1]},${INK[2]},0.22)`;
+    LANES.forEach(lane => {
+      ctx.fillText(lane.label, lane.startX + 8, lane.y - 8);
+    });
+
+    // Hairline connections
+    ctx.lineWidth = 0.65;
+    for (let i = 0; i < sorted.length; i++) {
+      const p1 = sorted[i];
+      for (let j = i + 1; j < sorted.length; j++) {
+        const p2 = sorted[j];
+        if (p1.st === ST.PRE && p2.st === ST.POST) continue;
+        if (p1.st === ST.POST && p2.st === ST.PRE) continue;
+        const d = d2(p1.x, p1.y, p2.x, p2.y);
+        if (d > CDIST) continue;
+        const base  = (1 - d / CDIST) * 0.20;
+        const boost = (p1.st === ST.COMMIT || p2.st === ST.COMMIT) ? 1.6 : 1;
+        const dep   = lerp(0.4, 1.0, ((p1.z + p2.z) / 2 + 1) / 2);
+        ctx.strokeStyle = `rgba(${INK[0]},${INK[1]},${INK[2]},${Math.min(base * boost * dep, 0.25)})`;
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+      }
+    }
+
+    // Particles
+    for (const p of sorted) {
+      ctx.fillStyle = `rgba(${INK[0]},${INK[1]},${INK[2]},${p.opacity})`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Glow
+    const g = ctx.createRadialGradient(CMTX, CMTY, 0, CMTX, CMTY, 48);
+    g.addColorStop(0, 'rgba(110,236,193,0.14)');
+    g.addColorStop(1, 'rgba(110,236,193,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(CMTX - 48, CMTY - 48, 96, 96);
+
+    // Mint commit square
+    ctx.fillStyle = MINT;
+    ctx.fillRect(CMTX - CMTSZ / 2, CMTY - CMTSZ / 2, CMTSZ, CMTSZ);
+
+    // "Atomic commit" label
+    ctx.font = '500 9px "JetBrains Mono", monospace';
+    ctx.fillStyle = '#0A6E54';
+    ctx.fillText('ATOMIC COMMIT', CMTX - 46, CMTY - CMTSZ / 2 - 10);
+  }
+
+  function frame(now) {
+    if (!lastTime) lastTime = now;
+    const delta = now - lastTime;
+    if (delta >= INTERVAL) {
+      lastTime = now - (delta % INTERVAL);
+      time += 0.018;
+      draw();
+    }
+    requestAnimationFrame(frame);
+  }
+
+  requestAnimationFrame(frame);
+})();
+</script>
+
+<!-- ═══════════════════════════════════
+     SCROLL FADE-IN
+════════════════════════════════════ -->
+<script>
+(function () {
+  const els = document.querySelectorAll('.fade-in');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.10 });
+  els.forEach(el => obs.observe(el));
+})();
+</script>
+
+<!-- ═══════════════════════════════════
+     PAGE TOC ACTIVE STATE
+════════════════════════════════════ -->
+<script>
+(function () {
+  const items    = document.querySelectorAll('.toc-item');
+  const sections = ['architecture', 'compliance', 'guarantees', 'engagement']
+    .map(id => document.getElementById(id)).filter(Boolean);
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        items.forEach(it => it.classList.remove('active'));
+        const active = [...items].find(it => it.getAttribute('href') === '#' + e.target.id);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 });
+
+  sections.forEach(s => obs.observe(s));
+})();
+</script>
+
+<!-- ═══════════════════════════════════
+     SCATTER DOT FIELD
+════════════════════════════════════ -->
+<script>
+(function () {
+  const canvas = document.getElementById('mandala-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const R = window.devicePixelRatio || 1;
+
+  const Z_FAR = 4.0, Z_NEAR = 0.07;
+  const COUNT = 260;
+
+  let cssW, cssH, vpX, vpY, particles;
+
+  function seeded(s) {
+    const x = Math.sin(s * 9301 + 49297) * 233280;
+    return x - Math.floor(x);
+  }
+
+  function spawn(i, initZ) {
+    const angle  = seeded(i * 5 + 0) * Math.PI * 2;
+    const spread = 0.12 + seeded(i * 5 + 1) * 0.88;
+    return {
+      ox: Math.cos(angle) * spread,      // radial offset, normalized
+      oy: Math.sin(angle) * spread * 0.5, // elliptical — flatter vertically
+      z:      initZ,
+      speed:  0.003 + seeded(i * 5 + 2) * 0.005,
+      maxR:   1.8 + seeded(i * 5 + 3) * 8,
+      hollow: seeded(i * 7 + 5) < 0.40,
+      mint:   seeded(i * 11 + 4) < 0.22,
+    };
+  }
+
+  function resize() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    cssW = rect.width;
+    cssH = rect.height;
+    vpX  = cssW * 0.64;
+    vpY  = cssH * 0.50;
+    canvas.width  = cssW * R;
+    canvas.height = cssH * R;
+    canvas.style.width  = cssW + 'px';
+    canvas.style.height = cssH + 'px';
+    ctx.setTransform(R, 0, 0, R, 0, 0);
+    /* stagger z so particles are spread at load */
+    particles = Array.from({length: COUNT}, (_, i) =>
+      spawn(i, Z_NEAR + seeded(i * 3 + 7) * (Z_FAR - Z_NEAR))
+    );
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  let last = 0;
+
+  function tick(now) {
+    if (now - last >= 33) {
+      last = now;
+      ctx.clearRect(0, 0, cssW, cssH);
+
+      const maxSpread = Math.min(cssW * 0.52, cssH * 1.1);
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.z -= p.speed;
+
+        if (p.z <= Z_NEAR) {
+          particles[i] = spawn(i + Math.floor(now * 0.01) * COUNT, Z_FAR);
+          continue;
+        }
+
+        const scale = 1 / p.z;
+        const px = vpX + p.ox * maxSpread * scale;
+        const py = vpY + p.oy * maxSpread * scale;
+
+        if (px < -30 || px > cssW + 30 || py < -30 || py > cssH + 30) continue;
+
+        const r = Math.min(p.maxR, p.maxR * 0.35 * scale);
+        if (r < 0.3) continue;
+
+        /* alpha envelope: fade in from far → bright → dissolve when close */
+        const t = 1 - (p.z - Z_NEAR) / (Z_FAR - Z_NEAR);
+        const alpha = (t < 0.14 ? t / 0.14 : t > 0.80 ? (1 - t) / 0.20 : 1.0)
+                    * (p.mint ? 0.88 : 0.72);
+
+        const color = p.mint
+          ? `rgba(110,236,193,${alpha})`
+          : `rgba(26,46,37,${alpha})`;
+
+        ctx.beginPath();
+        ctx.arc(px, py, r, 0, Math.PI * 2);
+        if (p.hollow) {
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 0.75;
+          ctx.stroke();
+        } else {
+          ctx.fillStyle = color;
+          ctx.fill();
+        }
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+
+  requestAnimationFrame(tick);
+})();
+</script>
+
+<!-- ═══════════════════════════════════
+     PLATFORMS PARTICLE + SYNAPSE CANVAS
+════════════════════════════════════ -->
+<script>
+(function () {
+  const canvas = document.getElementById('platforms-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  function setSize() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    canvas.width  = rect.width;
+    canvas.height = rect.height;
+  }
+  setSize();
+  window.addEventListener('resize', setSize);
+
+  // ── Sample logo shape into particle targets ──────────────────────────────
+  function sampleLogoPoints(count) {
+    const off = document.createElement('canvas');
+    off.width  = canvas.width;
+    off.height = canvas.height;
+    const oc  = off.getContext('2d');
+    const svgW = 1935, svgH = 2658;
+    const scale   = Math.min(canvas.width * 0.52 / svgW, canvas.height * 0.52 / svgH);
+    const offsetX = (canvas.width  - svgW * scale) / 2;
+    const offsetY = (canvas.height - svgH * scale) / 2;
+    oc.save();
+    oc.translate(offsetX, offsetY);
+    oc.scale(scale, scale);
+    oc.fillStyle = '#000';
+    oc.fill(new Path2D('M1691.44 1455.72C1698.53 1467.86 1705.66 1480.58 1712.83 1493.87L1795.1 1644.64C1431.34 2310.84 483.761 2658 483.761 2658V2126.37C867.062 2080.88 1617.58 1801.8 1691.44 1455.72Z'));
+    oc.fill(new Path2D('M1916.17 925.456C1928.45 985.201 1935 1048.75 1935 1116.35C1935 1203.02 1924.26 1286.15 1904.72 1365.75C1875.05 1312.96 1844.98 1268.03 1814.37 1231.07C1779.91 1187.92 1742.23 1153.03 1701.39 1126.37C1788.47 1075.68 1860 1008.65 1916.17 925.456Z'));
+    oc.fill(new Path2D('M0 0C397.366 0 1447.52 71.7498 1809.9 657.204C1805.19 674.195 1799.7 690.941 1793.28 707.399C1769.03 768.335 1735.83 821.691 1693.69 867.393C1651.57 913.087 1601.78 949.259 1544.33 975.916C1515.41 988.698 1485.51 998.227 1454.64 1004.57C1127.23 724.62 597.516 691.048 0 691.048V0Z'));
+    oc.restore();
+    const data   = oc.getImageData(0, 0, canvas.width, canvas.height).data;
+    const filled = [];
+    for (let y = 0; y < canvas.height; y++)
+      for (let x = 0; x < canvas.width; x++)
+        if (data[(y * canvas.width + x) * 4 + 3] > 128)
+          filled.push({ x: x - canvas.width / 2, y: y - canvas.height / 2 });
+    const result = [];
+    for (let i = 0; i < count; i++)
+      result.push(filled[Math.floor(Math.random() * filled.length)]);
+    return result;
+  }
+
+  // ── Particles ────────────────────────────────────────────────────────────
+  const numParticles       = 5000;
+  let   time               = 65;
+  let   animationStartTime = 0;
+  const initialT           = 65;
+  const initialMorphFactor = Math.sin(initialT * 0.2) * 0.5 + 0.5;
+
+  const particles = Array(numParticles).fill(null).map((_, i) => {
+    const angle1 = (i / numParticles) * Math.PI * 2;
+    const angle2 = Math.random() * Math.PI * 2;
+    const bs     = 120;
+    const r1     = bs * (1 + 0.3 * Math.sin(angle1 * 2));
+    const s1x    = r1 * Math.cos(angle1) * (1 + 0.2 * Math.sin(angle1 * 3 + initialT * 0.1));
+    const s1y    = r1 * Math.sin(angle1) * (1 + 0.4 * Math.cos(angle1 * 3 + initialT * 0.2));
+    const r2     = bs * (1 + 0.4 * Math.sin(angle2 * 3));
+    const s2x    = r2 * Math.cos(angle2) * (1 + 0.3 * Math.sin(angle2 * 2 + initialT * 0.15));
+    const s2y    = r2 * Math.sin(angle2) * (1 + 0.2 * Math.cos(angle2 * 4 + initialT * 0.25));
+    let x = canvas.width  / 2 + s1x * (1 - initialMorphFactor) + s2x * initialMorphFactor;
+    let y = canvas.height / 2 + s1y * (1 - initialMorphFactor) + s2y * initialMorphFactor;
+    const ib = 50 * (Math.sin(initialT * 0.3) * 0.2 + 0.8);
+    x += ib * Math.exp(-Math.pow(angle1 - Math.PI * 0.5, 2)) * Math.sin(initialT * 0.4);
+    y += ib * 0.5 * Math.exp(-Math.pow(angle1 - Math.PI * 0.5, 2)) * Math.cos(initialT * 0.3);
+    return { x, y, size: Math.random() * 1.5 + 0.5,
+             connections: [], targetX: 0, targetY: 0, vx: 0, vy: 0, angle: angle2 };
+  });
+
+  const logoTargets = sampleLogoPoints(numParticles);
+
+  // ── Green synapse nodes ──────────────────────────────────────────────────
+  const numGreen  = 120;
+  const greenSet  = new Set();
+  while (greenSet.size < numGreen) greenSet.add(Math.floor(Math.random() * numParticles));
+  const greenArr  = [...greenSet];
+  const synapses  = []; // { x1,y1, x2,y2, age, maxAge }
+
+  function updateSynapses() {
+    if (Math.random() < 0.5) {
+      const fromIdx = greenArr[Math.floor(Math.random() * greenArr.length)];
+      const p1      = particles[fromIdx];
+      let bestIdx   = -1, bestD2 = 90 * 90;
+      for (let k = 0; k < 100; k++) {
+        const j  = Math.floor(Math.random() * numParticles);
+        const p2 = particles[j];
+        const d2 = (p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2;
+        if (d2 < bestD2 && j !== fromIdx) { bestD2 = d2; bestIdx = j; }
+      }
+      if (bestIdx >= 0) {
+        const p2 = particles[bestIdx];
+        synapses.push({ x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y,
+                        age: 0, maxAge: 12 + Math.floor(Math.random() * 12) });
+      }
+    }
+    for (let i = synapses.length - 1; i >= 0; i--) {
+      if (++synapses[i].age > synapses[i].maxAge) synapses.splice(i, 1);
+    }
+  }
+
+  // ── calculateTargets ─────────────────────────────────────────────────────
+  function calculateTargets(t) {
+    const aTime    = t - 65 + animationStartTime;
+    const easeIn   = Math.min(1, aTime / 10);
+    const morph    = Math.sin(t * 0.2) * 0.5 + 0.5;
+    // Logo factor: smooth sinusoidal pulse, spends most time as blob
+    const logoFactor = Math.pow(Math.max(0, Math.sin((t - 65) * 0.7)), 3);
+
+    particles.forEach((p, i) => {
+      const a1  = (i / numParticles) * Math.PI * 2;
+      const a2  = p.angle;
+      const bs  = 120;
+      const ba  = 50 * (Math.sin(t * 0.3) * 0.2 + 0.8);
+      const te  = t + aTime * easeIn * 0.1;
+      const r1  = bs * (1 + 0.3 * Math.sin(a1 * 2));
+      const s1x = r1 * Math.cos(a1) * (1 + 0.2 * Math.sin(a1 * 3 + te * 0.1));
+      const s1y = r1 * Math.sin(a1) * (1 + 0.4 * Math.cos(a1 * 3 + te * 0.2));
+      const r2  = bs * (1 + 0.4 * Math.sin(a2 * 3));
+      const s2x = r2 * Math.cos(a2) * (1 + 0.3 * Math.sin(a2 * 2 + te * 0.15));
+      const s2y = r2 * Math.sin(a2) * (1 + 0.2 * Math.cos(a2 * 4 + te * 0.25));
+      const bx  = ba * Math.exp(-Math.pow(a1 - Math.PI * 0.5, 2));
+      const by  = ba * 0.5 * Math.exp(-Math.pow(a1 - Math.PI * 0.5, 2));
+      const ox  = s1x * (1 - morph) + s2x * morph + bx * Math.sin(te * 0.4) + (Math.random() - 0.5) * 5;
+      const oy  = s1y * (1 - morph) + s2y * morph + by * Math.cos(te * 0.3) + (Math.random() - 0.5) * 5;
+      const lt  = logoTargets[i];
+      p.targetX = ox * (1 - logoFactor) + lt.x * logoFactor;
+      p.targetY = oy * (1 - logoFactor) + lt.y * logoFactor;
+    });
+  }
+
+  function updateParticles() {
+    const aTime  = time - 65 + animationStartTime;
+    const easing = 0.01 + 0.02 * Math.min(1, aTime / 5);
+    particles.forEach(p => {
+      p.x += (p.targetX - (p.x - canvas.width  / 2)) * easing;
+      p.y += (p.targetY - (p.y - canvas.height / 2)) * easing;
+      p.connections = [];
+    });
+  }
+
+  function calculateConnections() {
+    const md2 = 25 * 25, mc = 3;
+    for (let i = 0; i < particles.length; i++) {
+      const p1 = particles[i];
+      if (p1.connections.length >= mc) continue;
+      for (let j = i + 1; j < particles.length; j++) {
+        const p2 = particles[j];
+        if (p2.connections.length >= mc) continue;
+        const dx = p1.x - p2.x, dy = p1.y - p2.y;
+        if (dx * dx + dy * dy < md2) {
+          p1.connections.push(j); p2.connections.push(i);
+          if (p1.connections.length >= mc) break;
+        }
+      }
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // transparent background
+
+    const cx = canvas.width / 2, cy = canvas.height / 2;
+
+    // Regular connections
+    ctx.strokeStyle = 'rgba(26,46,37,0.18)';
+    ctx.lineWidth   = 0.5;
+    for (let i = 0; i < particles.length; i++) {
+      const p1 = particles[i];
+      for (let k = 0; k < p1.connections.length; k++) {
+        const p2   = particles[p1.connections[k]];
+        const midX = (p1.x + p2.x) / 2;
+        const midY = (p1.y + p2.y) / 2;
+        const off  = 5 * Math.sin(time * 0.5 + i * 0.01);
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.quadraticCurveTo(midX + off, midY + off, p2.x, p2.y);
+        ctx.stroke();
+      }
+    }
+
+    // Synapse lines
+    for (const s of synapses) {
+      const prog  = s.age / s.maxAge;
+      const alpha = Math.sin(prog * Math.PI);
+      const reach = Math.min(1, prog * 2.2); // line travels from node outward
+      ctx.strokeStyle = `rgba(110,236,193,${alpha * 0.95})`;
+      ctx.lineWidth   = 1.5 * (1 - prog * 0.6);
+      ctx.shadowColor = 'rgba(110,236,193,0.7)';
+      ctx.shadowBlur  = 10 * (1 - prog);
+      ctx.beginPath();
+      ctx.moveTo(s.x1, s.y1);
+      ctx.lineTo(s.x1 + (s.x2 - s.x1) * reach, s.y1 + (s.y2 - s.y1) * reach);
+      ctx.stroke();
+    }
+    ctx.shadowBlur = 0; ctx.shadowColor = 'transparent';
+
+    // Particles
+    particles.forEach((p, i) => {
+      const d       = Math.sqrt((p.x - cx) ** 2 + (p.y - cy) ** 2);
+      const isGreen = greenSet.has(i);
+      if (isGreen) {
+        const pulse = 0.75 + 0.25 * Math.sin(time * 4 + i * 0.13);
+        ctx.shadowColor = 'rgba(110,236,193,0.9)';
+        ctx.shadowBlur  = 7 * pulse;
+        ctx.fillStyle   = `rgba(110,236,193,${0.85 * pulse})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * 1.3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      } else {
+        ctx.fillStyle = `rgba(26,46,37,${Math.max(0.08, 1 - d / 280)})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    });
+  }
+
+  let animationFrameId = null;
+  let lastFrameTime    = 0;
+  const frameInterval  = 1000 / 36;
+
+  function animate(currentTime) {
+    animationFrameId = requestAnimationFrame(animate);
+    const dt = currentTime - lastFrameTime;
+    if (dt >= frameInterval) {
+      lastFrameTime = currentTime - (dt % frameInterval);
+      time += 0.005;
+      calculateTargets(time);
+      updateParticles();
+      calculateConnections();
+      updateSynapses();
+      draw();
+    }
+  }
+
+  animationFrameId = requestAnimationFrame(animate);
+})();
+</script>
+
+</body>
+</html>

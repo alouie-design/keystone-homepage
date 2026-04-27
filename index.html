@@ -718,7 +718,7 @@ section { padding: 112px 0; }
 
     <div class="hero-rule"></div>
 
-    <p class="hero-sub-lead">One coordination layer.</p>
+    <p class="hero-sub-lead">One orchestration layer.</p>
     <p class="hero-sub-body">
       Settle repo. Move stablecoins. Rebalance treasury. Post collateral.<br>
       Atomically, across platforms, in seconds.
@@ -1349,18 +1349,18 @@ section { padding: 112px 0; }
 
   function animate() {
     time += 0.005;
-    const cycle = time % (Math.PI * 2);
+    const cycle = time % (Math.PI * 2.2);
 
-    /* Cycle: move (dark) → arrive (green) → hold → quick reset
+    /* Cycle: move (dark) → arrive (green) → hold → slow reverse
        ease=0 → bars at pattern1, just starting to move (dark)
        ease=1 → bars arrived at pattern2, fully settled (green)    */
     let ease;
     if (cycle < Math.PI * 1.4) {
-      ease = cycle / (Math.PI * 1.4);                              /* slow journey 0→1 */
-    } else if (cycle < Math.PI * 1.8) {
+      ease = cycle / (Math.PI * 1.4);                              /* journey 0→1      */
+    } else if (cycle < Math.PI * 1.6) {
       ease = 1;                                                     /* hold green       */
     } else {
-      ease = 1 - (cycle - Math.PI * 1.8) / (Math.PI * 0.2);       /* quick reset 1→0  */
+      ease = 1 - (cycle - Math.PI * 1.6) / (Math.PI * 0.6);       /* slow reverse 1→0 */
     }
     ease = Math.max(0, Math.min(1, ease));
 
