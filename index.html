@@ -694,8 +694,9 @@ section { padding: 112px 0; }
   .nav-right      { gap: 12px; }
   .nav-cta        { font-size: 9px; letter-spacing: 1.5px; }
 
-  /* Hero — hide decorative graphic on small screens */
-  .hero-graphic   { display: none; }
+  /* Hero — show graphic full-width behind text at low opacity */
+  .hero-graphic   { width: 100%; opacity: 0.18; }
+  .cta-stack .btn-primary { padding: 10px 18px !important; font-size: 12px !important; }
   h1              { font-size: clamp(32px, 8vw, 44px); letter-spacing: -1px; }
 
   /* Two-column grids → single column */
@@ -711,8 +712,9 @@ section { padding: 112px 0; }
   /* Spec table: 3-col → stacked */
   .spec-row       { grid-template-columns: 1fr; gap: 6px; padding: 20px 0; }
 
-  /* Guarantees: merge num+title column */
-  .g-row          { grid-template-columns: 36px 1fr; }
+  /* Guarantees: 3 children → full single column stack */
+  .g-row          { grid-template-columns: 1fr; gap: 4px; }
+  .g-num          { display: inline; margin-right: 8px; }
   .g-body, .g-body-wrap { max-width: 100%; }
 
   /* Footer */
