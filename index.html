@@ -679,6 +679,9 @@ section { padding: 112px 0; }
   transform: translateY(0);
 }
 
+/* Mobile-only line break helper */
+.mob-br { display: none; }
+
 /* ── MOBILE ── */
 @media (max-width: 768px) {
   /* Spacing */
@@ -699,13 +702,18 @@ section { padding: 112px 0; }
   .hero-rule      { display: none; }
   .hero-graphic   { width: 100%; opacity: 0.38; }
   .hero-eyebrow   { margin-bottom: 18px; }
-  h1              { font-size: clamp(32px, 8vw, 44px); letter-spacing: -1px; margin-bottom: 20px; }
-  .hero-sub-body  { margin-bottom: 20px; }
-  .cta-stack      { margin-bottom: 12px; }
+  h1              { font-size: clamp(32px, 8vw, 44px); letter-spacing: -1px; margin-bottom: 45px; }
+  .hero-sub-body  { margin-bottom: 20px; font-size: 14px; }
+  .mob-br         { display: inline; }
+  .cta-stack      { display: grid !important; grid-template-columns: 1fr 1fr; margin-bottom: 12px; }
+  .cta-stack a    { width: 100% !important; justify-content: center; }
   .cta-stack .btn-primary { padding: 10px 18px !important; font-size: 12px !important; }
+  .cta-stack .btn-outline { padding: 10px 18px !important; font-size: 12px !important; }
 
   /* Two-column grids → single column */
-  .cstack-intro   { grid-template-columns: 1fr; gap: 16px; }
+  #architecture   { padding-top: 53px !important; }
+  .cstack-intro   { grid-template-columns: 1fr; gap: 14px; margin-bottom: 64px; }
+  .section-p      { margin-top: 0; }
   .thesis-grid    { grid-template-columns: 1fr; gap: 40px; }
   .engagement-grid { grid-template-columns: 1fr; gap: 20px; }
   .sim-box        { margin-top: 0; }
@@ -769,7 +777,7 @@ section { padding: 112px 0; }
 
     <p class="hero-sub-lead">One orchestration layer.</p>
     <p class="hero-sub-body">
-      Settle repo. Move stablecoins. Rebalance treasury. Post collateral.<br>
+      Settle repo. Move stablecoins.<br class="mob-br"> Rebalance treasury. Post collateral.<br>
       Atomically, across platforms, in seconds.
     </p>
 
