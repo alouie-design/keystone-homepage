@@ -679,6 +679,46 @@ section { padding: 112px 0; }
   transform: translateY(0);
 }
 
+/* ── MOBILE ── */
+@media (max-width: 768px) {
+  /* Spacing */
+  .wrap           { padding: 0 20px; }
+  .nav-inner      { padding: 0 20px; height: 56px; }
+  .hero           { padding: 40px 20px 36px; }
+  section         { padding: 64px 0; }
+  .fslab          { padding: 48px 20px 40px; }
+  .footnote       { padding: 14px 20px; }
+
+  /* Nav — hide text links, keep logo + CTA */
+  .nav-link       { display: none; }
+  .nav-right      { gap: 16px; }
+
+  /* Hero — hide decorative graphic on small screens */
+  .hero-graphic   { display: none; }
+  h1              { font-size: clamp(32px, 8vw, 44px); letter-spacing: -1px; }
+
+  /* Two-column grids → single column */
+  .cstack-intro   { grid-template-columns: 1fr; gap: 40px; }
+  .thesis-grid    { grid-template-columns: 1fr; gap: 40px; }
+  .engagement-grid { grid-template-columns: 1fr; gap: 40px; }
+
+  /* Logo grid: 4-up → 2-up */
+  .logo-grid      { grid-template-columns: repeat(2, 1fr); }
+  .logo-cell      { padding: 24px 16px 24px 0; }
+  .logo-cell + .logo-cell { padding-left: 16px; }
+
+  /* Spec table: 3-col → stacked */
+  .spec-row       { grid-template-columns: 1fr; gap: 6px; padding: 20px 0; }
+
+  /* Guarantees: merge num+title column */
+  .g-row          { grid-template-columns: 36px 1fr; }
+  .g-body, .g-body-wrap { max-width: 100%; }
+
+  /* Footer */
+  .fslab-top      { flex-direction: column; align-items: flex-start; gap: 24px; }
+  .fslab-actions  { flex-direction: column; align-items: flex-start; gap: 8px; }
+}
+
 </style>
 </head>
 <body>
